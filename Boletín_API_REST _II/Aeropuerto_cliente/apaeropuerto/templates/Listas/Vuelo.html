@@ -1,0 +1,9 @@
+
+    <h2>Vuelo</h2>
+    <p><strong>ID:</strong> {{ vuelo.id }}</p>
+    <p><strong>Hora de Salida:</strong> {{ vuelo.hora_salida }}</p>
+    <p><strong>Hora de Llegada:</strong> {{ vuelo.hora_llegada }}</p>
+    <p><strong>Estado:</strong> {% if vuelo.estado %} Volando {% else %} Aterrizado {% endif %}</p> 
+    <p><strong>Duracion:</strong> {{ vuelo.duracion }}</p>
+    <p><strong>Aeropuerto Origen:</strong> {{ vuelo.origen.nombre }}</p>
+    <p><strong>Aeropuerto Destino:</strong> {{ vuelo.destino.nombre }}</p>
