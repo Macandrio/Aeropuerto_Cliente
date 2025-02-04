@@ -128,7 +128,46 @@ def Aeropuerto_busqueda_simple(request):
     return render(request, 'Formularios/Aeropuerto/buscar.html',{"aeropuerto":aeropuerto})
 
 
-#Páginas de Error
+def Aeropuerto_busqueda_avanzada(request):
+    if(len(request.GET) > 0):
+        formulario = BusquedaAvanzadaAeropuertoForm(request.GET)
+        
+        try:
+            headers = crear_cabecera()
+            response = requests.get(
+                BASE_API_URL_local + 'Aeropuerto/busqueda_avanzada',
+                headers=headers,
+                params=formulario.data
+            )             
+            if(response.status_code == requests.codes.ok):
+                aeropuerto = response.json()
+                return render(request, 'Formularios/Aeropuerto/busqueda_avanzada.html',{"aeropuerto":aeropuerto})
+            else:
+                print(response.status_code)
+                response.raise_for_status()
+        except HTTPError as http_err:
+            print(f'Hubo un error en la petición: {http_err}')
+            if(response.status_code == 400):
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error,errores[error])
+                return render(request, 
+                            'Formularios/Aeropuerto/busqueda_avanzada.html',
+                            {"formulario":formulario,"errores":errores})
+            else:
+                return mi_error_500(request)
+        except Exception as err:
+            print(f'Ocurrió un error: {err}')
+            return mi_error_500(request)
+    else:
+        formulario = BusquedaAvanzadaAeropuertoForm(None)
+    return render(request, 'Formularios/Aeropuerto/busqueda_avanzada.html',{"formulario":formulario})
+
+import base64
+
+#------------------------------------------------------Páginas de Error-----------------------------------------------------------------------------
+
+
 def index(request): 
     return render(request, 'index.html')
 def mi_error_400(request,exception=None):
