@@ -433,7 +433,7 @@ git checkout main = pasar de ramas
 git branch api_rest_2 = para crer rama
 git branch -m api_rest_2 api_rest_3 = cambiar nombre
 git branch -d api_rest_2 = borrar rama (tiene que estar fuera de la rama)
-
+git merge main api_rest_2 = va a uni las ramas
 
 
 #para el servidor
