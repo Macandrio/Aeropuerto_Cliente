@@ -1,41 +1,27 @@
 {% extends 'Principal.html' %}
 
 {% block contenido %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
-            <div class="card shadow-lg">
-                <div class="card-header bg-primary text-white text-center">
-                    <h3>Resultados de la Búsqueda</h3>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted mb-4">{{ texto_busqueda }}</p>
-                    {% if aeropuertos_mostrar %}
-                        <table class="table table-hover">
-                            <thead class="table-light">
-                                <tr>
-                                    <th scope="col">Nombre</th>
-                                    <th scope="col">Ciudad</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for aeropuerto in aeropuertos_mostrar %}
-                                    <tr>
-                                        <td>{{ aeropuerto.nombre }}</td>
-                                        <td>{{ aeropuerto.ciudades }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    {% else %}
-                        <p class="text-danger text-center">No se encontraron resultados para los filtros aplicados.</p>
-                    {% endif %}
-                </div>
-                <div class="card-footer text-muted text-center">
-                    Si no encontraste lo que buscabas, ajusta los filtros e inténtalo de nuevo.
-                </div>
+<h1 class="display-3">Lista de Libros</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-        </div>
+        {% endfor %}
+    {% endif %}
+
+    {% block busqueda %}
+    {% endblock %}
+
+    <div class="row">
+        {% for aeropuerto in aeropuerto_mostrar %}
+            <div class="col-sm-4 mb-2">
+                {% include 'Lista/Aeropuerto.html' %}
+            </div>
+        {% empty %}
+            <h1>Lo sentimos pero no hay libros</h1>
+        {% endfor %}
     </div>
-</div>
 {% endblock %}

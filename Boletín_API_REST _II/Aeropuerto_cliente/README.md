@@ -528,3 +528,11 @@ Empleado.objects.select_related(
     'servicio'                            # ManyToOne con Servicio
 )
 
+
+http://0.0.0.0:8000/oauth2/applications/
+
+curl -X POST "http://0.0.0.0:8000/oauth2/token/" -d "grant_type=password&username=admin&password=admin&client_id=mi_aplicacion&client_secret=mi_clave_secreta"
+
+
+Funciona
+http://127.0.0.1:8000/api/v1/Aeropuerto/busqueda_simple?textoBusqueda=a

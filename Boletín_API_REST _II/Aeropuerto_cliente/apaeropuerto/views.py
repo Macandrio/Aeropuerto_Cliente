@@ -3,7 +3,6 @@ from .forms import *
 from django.contrib import messages
 import json
 from requests.exceptions import HTTPError
-
 import requests
 import environ
 import os
@@ -100,24 +99,47 @@ def vueloaerolinea_listar_api(request):
 #------------------------------------------------Formularios------------------------------------------------------------
 def crear_cabecera():
     return {
-        'Authorization': 'Bearer '+env("TOKEN_ACCESO"),
+        'Authorization': 'Bearer '+env("Admin"),
         "Content-Type": "application/json"
         }
 
 
 def Aeropuerto_busqueda_simple(request):
-    formulario = BusquedaAeropuertoForm(request.GET)
-    
-    if formulario.is_valid():
-        headers = crear_cabecera()
-        response = requests.get(
-            BASE_API_URL_local + 'Aeropuerto/busqueda_simple',
-            headers=headers,
-            params={'textoBusqueda':formulario.data.get("textoBusqueda")}
-        )
-        aeropuerto = response.json()
-        return render(request, 'Formularios/Aeropuerto/busqueda.html',{"aeropuerto_mostrar":aeropuerto})
-    if("HTTP_REFERER" in request.META):
-        return redirect(request.META["HTTP_REFERER"])
+    aeropuerto = []
+    if request.GET:
+        formulario = BusquedaAeropuertoForm(request.GET)
+        if formulario.is_valid():
+            headers = crear_cabecera()
+            response = requests.get(
+                BASE_API_URL_local + 'Aeropuerto/busqueda_simple',
+                headers=headers,
+                params={'textoBusqueda':formulario.data.get("textoBusqueda")}
+            )
+            aeropuerto = response.json()
+            return render(request, 'Formularios/Aeropuerto/buscar.html',{"aeropuerto":aeropuerto})
+        if("HTTP_REFERER" in request.META):
+            return redirect(request.META["HTTP_REFERER"])
+        else:
+            return redirect("index")
+
     else:
-        return redirect("index")
+        formulario = BusquedaAeropuertoForm()
+
+    return render(request, 'Formularios/Aeropuerto/buscar.html',{"aeropuerto":aeropuerto})
+
+
+#Páginas de Error
+def index(request): 
+    return render(request, 'index.html')
+def mi_error_400(request,exception=None):
+    return render(request,"errors/400.html",None,None,400)
+
+def mi_error_403(request,exception=None):
+    return render(request,"errors/403.html",None,None,403)
+
+def mi_error_404(request,exception=None):
+    return render(request,"errors/404.html",None,None,404)
+
+def mi_error_500(request,exception=None):
+    return render(request,"errors/500.html",None,None,500)
+
