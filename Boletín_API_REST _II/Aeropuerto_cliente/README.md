@@ -436,7 +436,6 @@ git branch -d api_rest_2 = borrar rama (tiene que estar fuera de la rama)
 git merge api_rest_2 master = para unir la rama 1 con la rama 2 (estar en la rama que va a recibir los cambios)
 
 
-
 #para el servidor
 python manage.py runserver 127.0.0.1:8081
 
