@@ -1,0 +1,22 @@
+<div class="dropdown me-3"> <!-- Margen derecho -->
+    <button class="btn dropdown-toggle text-white" id="menuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa-solid fa-bars"></i> Menú
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end">
+        <li>
+            <a class="dropdown-item" href="{% url 'aeropuerto_listar_api' %}"><i class="fa-solid fa-building"></i> Aeropuertos</a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="{% url 'aerolinea_listar_api' %}"><i class="fa-solid fa-building"></i> Aerolineas</a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="{% url 'vuelo_listar_api' %}"><i class="fa-solid fa-building"></i> Vuelos</a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="{% url 'reserva_listar_api' %}"><i class="fa-solid fa-building"></i> Reserva</a>
+        </li>
+        <li>
+            <a class="dropdown-item" href="{% url 'vueloaerolinea_listar_api' %}"><i class="fa-solid fa-building"></i> Vuelos de Aerolionea</a>
+        </li>
+    </ul>
+</div>
