@@ -450,7 +450,18 @@ git branch rama1 = para crer rama
 git branch -m rama1 api_rest_3 = cambiar nombre
 git branch -d rama1 = borrar rama (tiene que estar fuera de la rama)
 git merge rama1  = para unir la rama 1 con la rama 2 (estar en la rama que va a recibir los cambios (main))
-git push origin main
+git push -u origin nombre-de-la-rama
+
+
+
+bajar rama
+1.  Clono el repositorio
+2.  git fetch
+3.  git branch -r
+4.  git checkout rama1
+5.  git pull origin rama1
+
+
 
 
 M (Modified) → Archivo modificado en rama1
