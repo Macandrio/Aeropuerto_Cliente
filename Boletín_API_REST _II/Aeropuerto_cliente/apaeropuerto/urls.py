@@ -12,5 +12,6 @@ urlpatterns = [
 
     path('Aeropuerto/busqueda_simple/', views.Aeropuerto_busqueda_simple, name='Aeropuerto_busqueda_simple'),
     path('Aeropuerto/busqueda_avanzada/', views.Aeropuerto_busqueda_avanzada, name='Aeropuerto_busqueda_avanzada'),
-
+    path('Aerolinea/busqueda_avanzada/', views.Aerolinea_busqueda_avanzada, name='Aerolinea_busqueda_avanzada'),
+    path('Estadisticas/busqueda_avanzada/', views.Estadisticas_busqueda_avanzada, name='Estadisticas_busqueda_avanzada'),
 ]

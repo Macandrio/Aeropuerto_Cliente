@@ -48,3 +48,57 @@ class BusquedaAvanzadaAeropuertoForm(forms.Form):
                                 required=False,
                                 widget=forms.CheckboxSelectMultiple()
                                )
+    
+
+class BusquedaAvanzadaAerolineaForm(forms.Form):
+
+    paises = [
+        ("ES", "España"),
+        ("EN", "Inglaterra"),
+        ("FR", "Francia"),
+        ("IT", "Italia"),
+    ]
+
+    nombre = forms.CharField(required=True)
+    codigo = forms.CharField(required=False)
+    fecha_fundacion = forms.DateField()
+    pais = forms.ChoiceField(choices=paises,required=False)
+
+
+class BusquedaAvanzadaEstadisticas(forms.Form):
+    
+    fecha_estadisticas = forms.DateField(
+        required=False,
+        widget=forms.DateTimeInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Fecha y Hora',
+            'type' : 'date'
+        })
+    )
+
+    numero_asientos_vendidos = forms.IntegerField(
+        required=False,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Contenido...',
+        })
+    )
+
+    numero_cancelaciones = forms.IntegerField(
+        required=False,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Contenido...',
+        })
+    )
+
+    feedback_pasajeros = forms.CharField(
+            required=False,
+            widget=forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Contenido...',
+            })
+        )
+
+    
+    

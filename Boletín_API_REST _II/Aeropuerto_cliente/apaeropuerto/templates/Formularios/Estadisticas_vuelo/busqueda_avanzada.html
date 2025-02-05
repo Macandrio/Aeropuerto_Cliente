@@ -1,6 +1,7 @@
 {% extends 'Principal.html' %}
 
 {% block contenido %}
+
 {% if messages %}
 {% for message in messages %}
     <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -9,30 +10,34 @@
     </div>
 {% endfor %}
 {% endif %}
+
 <div class="card shadow p-4">
     <h2 class="text-secondary mb-4">Filtros de búsqueda</h2>
     <form method="GET" class="mb-4">
-        <div>
-            {{ formulario.textoBusqueda.label_tag }}
-            {{ formulario.textoBusqueda }}
-            {% for error in formulario.textoBusqueda.errors %}
-                <div class="text-danger"><small>{{ error }}</small></div>
-            {% endfor %}
-        </div>
-       <div>
-            {{ formulario.ciudades.label_tag }}
-            {{ formulario.ciudades }}
-            {% for error in formulario.ciudades.errors %}
-                <div class="text-danger"><small>{{ error }}</small></div>
-            {% endfor %}
-       </div>
-       <div>
-            {{ formulario.pais.label_tag }}
-            {{ formulario.pais }}
-            {% for error in formulario.pais.errors %}
-                <div class="text-danger"><small>{{ error }}</small></div>
-            {% endfor %}
-       </div>
+        {{ formulario.fecha_estadisticas.label_tag }}
+        {{ formulario.fecha_estadisticas }}
+        {% for error in formulario.fecha_estadisticas.errors %}
+            <div class="text-danger"><small>{{ error }}</small></div>
+        {% endfor %}
+    
+        {{ formulario.numero_asientos_vendidos.label_tag }}
+        {{ formulario.numero_asientos_vendidos }}
+        {% for error in formulario.numero_asientos_vendidos.errors %}
+            <div class="text-danger"><small>{{ error }}</small></div>
+        {% endfor %}
+
+        {{ formulario.numero_cancelaciones.label_tag }}
+        {{ formulario.numero_cancelaciones }}
+        {% for error in formulario.numero_cancelaciones.errors %}
+            <div class="text-danger"><small>{{ error }}</small></div>
+        {% endfor %}
+
+        {{ formulario.feedback_pasajeros.label_tag }}
+        {{ formulario.feedback_pasajeros }}
+        {% for error in formulario.feedback_pasajeros.errors %}
+            <div class="text-danger"><small>{{ error }}</small></div>
+        {% endfor %}
+    
         <button type="submit" class="btn btn-primary w-100">Buscar</button>
     </form>
 </div>
@@ -40,16 +45,18 @@
 <h2 class="text-center text-secondary my-4">Resultados de búsqueda</h2>
 
 <div class="row">
-    {% if aeropuerto %}
-        {% for aeropuertoo in aeropuerto %}
+    {% if estadisticas %}
+        {% for estadistica in estadisticas %}
         <div class="col-md-4 mb-4">
             <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title">{{ aeropuertoo.id }}</h5>
+                    <h5 class="card-title">{{ estadistica.id }}</h5>
                     <p class="card-text">
-                        <strong>Nombre:</strong> {{ aeropuertoo.nombre }}<br>
-                        <strong>ciudades:</strong> {{ aeropuertoo.ciudades }}<br>
-                        <strong>pais:</strong> {{ aeropuertoo.pais }}<br>
+                        <strong>Fecha estadisticas:</strong> {{ estadistica.fecha_estadisticas }}<br>
+                        <strong>Asientos vendidos:</strong> {{ estadistica.numero_asientos_vendidos }}<br>
+                        <strong>Asientos Cancelados:</strong> {{ estadistica.numero_cancelaciones }}<br>
+                        <strong>feedback pasajeros:</strong> {{ estadistica.feedback_pasajeros }}<br>
+                        <strong>Vuelo:</strong> {{ estadistica.vuelo.id }}<br>
                     </p>
                 </div>
                 <div class="card-footer text-center">
@@ -63,7 +70,7 @@
                         </div>
                     </div>
                     <div class="mb-2">
-                        <form  method = "post"> 
+                        <form method = "post"> 
                             {% csrf_token %}
                             <button class="btn btn-danger" type="submit">
                                 <span>{% bs_icon 'trash' %}</span>

@@ -402,6 +402,22 @@ Esta el usuario gerente que debe poder hace las estadisticas de vuelo.
 
 
 ---------------------------------------------------------------------------------------------------------------------------
+# Tema Api Res II:
+
+* Por cada petición que hemos hecho, se ha incluido siempre lo siguiente:http://127.0.0.1:8000/api/v1/libros/, que pasaría si en un futuro, la versión cambiar.¿Deberíamos cambiarlo en todos los sitios de la aplicación?¿Cómo podríamos mejorarlo? (1 punto).
+
+    Porque si en un futuro cambiamos de version tendriamos que hacerlo manual mente eso no seria eficiente y lo mejor seria con una variable de global y en un archivo de configuracion.
+
+
+* Para la respuesta siempre incluimos la misma línea:response.json(). ¿Qué pasaría si en el día de mañana cambia el formato en una nueva versión, y en vez de json es xml?¿Debemos volver a cambiar en todos los sitios esa línea?
+
+    pues que el codigo fallaria para evitar el problema deberiamos de tener el codigo que pudiera recibir todo tipo de datos.
+
+* ¿Siempre debemos tratar todos los errores en cada una de las peticiones?
+
+    No es practico lo suyo es crear una funcion rutilizable
+
+---------------------------------------------------------------------------------------------------------------------------
 # comandos :
 
 python3 -m venv myvenv
@@ -450,7 +466,15 @@ python manage.py runserver 127.0.0.1:8081
 
 
 -----------------------------------------------------------------------------------
-from django.db.models import Prefetch
+Código HTTP	        Causa	                            Acción tomada
+400	                Solicitud incorrecta	            Muestra un mensaje en el formulario.
+401	                No autorizado	                    Redirige a una página de error 401.
+403	                Prohibido	                        Redirige a una página de error 403.
+404	                No encontrado	                    Redirige a una página de error 404.
+500+	            Error en el servidor	            Llama a mi_error_500(request).
+Error de conexión	No se puede conectar con la API	    Muestra una página de error de conexión.
+
+
 
 # Aeropuerto
 Aeropuerto.objects.prefetch_related(
