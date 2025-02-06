@@ -139,35 +139,13 @@ def Aeropuerto_busqueda_avanzada(request):
         if formulario.is_valid():
             try:
                 headers = crear_cabecera()
-                params = {}
-
-                # 📌 Depuración: Ver el contenido real antes de usarlo
-                paises_seleccionados = formulario.cleaned_data.get('pais', [])
-                ciudades_seleccionadas = formulario.cleaned_data.get('ciudades', [])
-
-                print("📌 Países seleccionados antes de procesar:", paises_seleccionados)
-                print("📌 Ciudades seleccionadas antes de procesar:", ciudades_seleccionadas)
-
-                # Asegurar que sean listas antes de usar .join()
-                if not isinstance(paises_seleccionados, list):
-                    paises_seleccionados = list(paises_seleccionados) if paises_seleccionados else []
-
-                if not isinstance(ciudades_seleccionadas, list):
-                    ciudades_seleccionadas = list(ciudades_seleccionadas) if ciudades_seleccionadas else []
-
-                # Convertir listas a strings separados por comas
-                params['pais'] = ','.join(paises_seleccionados)
-                params['ciudades'] = ','.join(ciudades_seleccionadas)
-
-                print("📌 Parámetros enviados a la API:", params)
-
                 response = requests.get(
                     BASE_API_URL_local + 'Aeropuerto/busqueda_avanzada',
                     headers=headers,
-                    params=params
+                    params=formulario.cleaned_data
                 )
 
-                # 📌 Detectar formato de respuesta (JSON o XML)
+                #  Detectar formato de respuesta (JSON o XML)
                 content_type = response.headers.get("Content-Type", "")
                 if "application/json" in content_type:
                     aeropuerto = response.json()
@@ -176,7 +154,7 @@ def Aeropuerto_busqueda_avanzada(request):
                 else:
                     aeropuerto = response.text  # Si el formato es desconocido, tratarlo como texto
 
-                print("📌 Datos recibidos:", aeropuerto)
+                print(" Datos recibidos:", aeropuerto)
 
                 if response.status_code == requests.codes.ok:
                     return render(request, 'Formularios/Aeropuerto/busqueda_avanzada.html', {"aeropuerto": aeropuerto})
@@ -204,7 +182,7 @@ def Aerolinea_busqueda_avanzada(request):
                     params=formulario.cleaned_data
                 )
 
-                # 📌 Detectar formato de respuesta (JSON o XML)
+                #  Detectar formato de respuesta (JSON o XML)
                 content_type = response.headers.get("Content-Type", "")
                 if "application/json" in content_type:
                     aerolinea = response.json()
@@ -213,7 +191,7 @@ def Aerolinea_busqueda_avanzada(request):
                 else:
                     aerolinea = response.text
 
-                print("📌 Datos recibidos:", aerolinea)
+                print(" Datos recibidos:", aerolinea)
 
                 if response.status_code == requests.codes.ok:
                     return render(request, 'Formularios/Aerolinea/busqueda_avanzada.html', {"aerolinea": aerolinea})
@@ -241,7 +219,7 @@ def Estadisticas_busqueda_avanzada(request):
                     params=formulario.cleaned_data
                 )
 
-                # 📌 Detectar formato de respuesta (JSON o XML)
+                #  Detectar formato de respuesta (JSON o XML)
                 content_type = response.headers.get("Content-Type", "")
                 if "application/json" in content_type:
                     estadisticas = response.json()
@@ -250,7 +228,7 @@ def Estadisticas_busqueda_avanzada(request):
                 else:
                     estadisticas = response.text
 
-                print("📌 Datos recibidos:", estadisticas)
+                print(" Datos recibidos:", estadisticas)
 
                 if response.status_code == requests.codes.ok:
                     return render(request, 'Formularios/Estadisticas_vuelo/busqueda_avanzada.html', {"estadisticas": estadisticas})
@@ -285,41 +263,3 @@ def mi_error_500(request,exception=None):
     return render(request,"errors/500.html",None,None,500)
 
 
-
-def manejar_errores_api(response, request, formulario=None, template="errors/error_general.html"):
-    """
-    Maneja los errores HTTP al hacer peticiones a la API REST.
-    :param response: Respuesta de la API
-    :param request: Objeto request de Django
-    :param formulario: Formulario en caso de errores 400
-    :param template: Plantilla para mostrar errores específicos
-    :return: Render de la plantilla de error correspondiente
-    """
-    print(f"❌ Error HTTP: {response.status_code}")
-    
-    if response.status_code == 400:
-        return render(request, template, {"formulario": formulario, "error": "Solicitud incorrecta."})
-    elif response.status_code == 401:
-        return render(request, 'errors/401.html')  # Acceso no autorizado
-    elif response.status_code == 403:
-        return render(request, 'errors/403.html')  # Prohibido
-    elif response.status_code == 404:
-        return render(request, 'errors/404.html')  # No encontrado
-    elif response.status_code >= 500:
-        return render(request, 'errors/500.html')  # Error interno del servidor
-    
-    return render(request, template, {"error": "Ocurrió un error inesperado."})
-
-def manejar_excepciones_api(err, request):
-    """
-    Maneja excepciones generales en las peticiones a la API.
-    :param err: Excepción capturada
-    :param request: Objeto request de Django
-    :return: Render de la plantilla de error
-    """
-    print(f"⚠️ Error inesperado: {err}")
-    
-    if isinstance(err, requests.exceptions.RequestException):
-        return render(request, 'errors/conexion_error.html')
-    
-    return render(request, 'errors/error_general.html')

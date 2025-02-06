@@ -13,7 +13,10 @@ class BusquedaAeropuertoForm(forms.Form):
 
 class BusquedaAvanzadaAeropuertoForm(forms.Form):
     
-    textoBusqueda = forms.CharField(required=False)
+    textoBusqueda = forms.CharField(required=False,widget=forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Contenido...',
+            }))
 
     PAISES = [
     ("ES", "España"),
@@ -40,13 +43,22 @@ class BusquedaAvanzadaAeropuertoForm(forms.Form):
     ("CH", "Ginebra"),
     ]
 
-    pais = forms.MultipleChoiceField(choices=PAISES,
-                                required=False,
-                                widget=forms.CheckboxSelectMultiple()
-                               )
+    pais = forms.MultipleChoiceField(
+    choices=PAISES,
+    required=False,
+    widget=forms.CheckboxSelectMultiple(
+        attrs={
+            'class': 'custom-checkbox-group d-flex flex-wrap gap-2 p-2 border rounded bg-light'
+        }
+        )
+    )
+
     ciudades = forms.MultipleChoiceField(choices=CIUDADES,
                                 required=False,
-                                widget=forms.CheckboxSelectMultiple()
+                                widget=forms.CheckboxSelectMultiple(attrs={
+            'class': 'custom-checkbox-group d-flex flex-wrap gap-2 p-2 border rounded bg-light'
+        }
+        )
                                )
     
 
