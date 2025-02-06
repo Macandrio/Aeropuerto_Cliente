@@ -454,10 +454,9 @@ git push -u origin nombre-de-la-rama
 
 * subir la rama
 1. git branch
-2. git status
-3. git add .
-4. git commit -m "Subir"
-5. git push -u origin rama1
+2. git add .
+3. git commit -m "Subir"
+4. git push -u origin rama1
 
 
 * bajar rama
