@@ -402,27 +402,22 @@ Esta el usuario gerente que debe poder hace las estadisticas de vuelo.
 
 
 ---------------------------------------------------------------------------------------------------------------------------
+# Tema Api Res II:
 
-# Tema Api Rest I:
+* Por cada petición que hemos hecho, se ha incluido siempre lo siguiente:http://127.0.0.1:8000/api/v1/libros/, que pasaría si en un futuro, la versión cambiar.¿Deberíamos cambiarlo en todos los sitios de la aplicación?¿Cómo podríamos mejorarlo? (1 punto).
 
-* Configurar vuestra aplicación para que tenga una API REST y que sea accesible desde pythonanywhere.Enviar enlace de github(1 punto)
+    Porque si en un futuro cambiamos de version tendriamos que hacerlo manual mente eso no seria eficiente y lo mejor seria con una variable de global y en un archivo de configuracion.
 
-* Crear una aplicación para que consulte vuestra API REST. Enviarme enlace github. (1 punto)
 
-* Crear una consulta sencilla al listado de vuestro modelo principal de la aplicación y mostrarla en vuestra aplicación cliente. (1 punto)
+* Para la respuesta siempre incluimos la misma línea:response.json(). ¿Qué pasaría si en el día de mañana cambia el formato en una nueva versión, y en vez de json es xml?¿Debemos volver a cambiar en todos los sitios esa línea?
 
-* Crear una consulta mejorada al listado de vuestro modelo principal de la aplicación cliente. Debe ser una vista distinta a la anterior, con un template y url disntinta. (1 punto)
+    pues que el codigo fallaria para evitar el problema deberiamos de tener el codigo que pudiera recibir todo tipo de datos.
 
-* Añadir seguridad en OAUTH 2 a vuestra API REST. (1 punto)
+* ¿Siempre debemos tratar todos los errores en cada una de las peticiones?
 
-* Crear una variable de entorno, y añadir una clave para cada tipo de usuario que tengais en vuestra base de datos. Añadirlos en la variable de entorno. (Esta variable la tenéis que quitar del .gitignore, no es seguro, pero al estar en un entorno de aprendizaje, lo haremos asi)(1 punto)
+    No es practico lo suyo es crear una funcion rutilizable
 
-* Crear dos consultas mejorada a un listado de otro modelo de vuestra aplicación. (1.5 punto)
-
-* Incluir otro tipo de autenticación a vuestra aplicación por API e incluir una consulta mejorada a oto modelo que no se haya realizado antes. Explicar como se configura mediante un documento o presentacion(2.5 punto)
-
----------------------------------------------------------------------------------------------------------------------------
-
+-----------------------------------------------------Mis cosas----------------------------------------------------------------------
 # comandos :
 
 python3 -m venv myvenv
@@ -436,10 +431,8 @@ python manage.py migrate
 python manage.py makemigrations apaeropuerto
 python manage.py migrate apaeropuerto
 python manage.py seed apaeropuerto --number=20
-python manage.py dumpdata --indent 4 > apaeropuerto/fixtures/datos_sesiones.json
-python manage.py dumpdata auth.group auth.permission --indent 4 > apaeropuerto/fixtures/grupos_permisos.json
-
-python manage.py loaddata apaeropuerto/fixtures/datos_sesion.json
+python manage.py dumpdata --indent 4 > apaeropuerto/fixtures/datos_sesion.json
+python manage.py loaddata apaeropuerto/fixtures/datos2.json
 
 python manage.py createsuperuser
 python manage.py runserver
@@ -450,14 +443,54 @@ git commit -m 'Completado'
 git push
 git pull
 
+
+git branch = En la rama que estoy
+git checkout main = pasar de ramas
+git branch rama1 = para crer rama
+git branch -m rama1 api_rest_3 = cambiar nombre
+git branch -d rama1 = borrar rama (tiene que estar fuera de la rama)
+git merge rama1  = para unir la rama 1 con la rama 2 (estar en la rama que va a recibir los cambios (main))
+git push -u origin nombre-de-la-rama
+
+* subir la rama
+1. git branch
+2. git add .
+3. git commit -m "Subir"
+4. git push -u origin rama1
+
+
+* bajar rama
+1.  Clono el repositorio
+2.  git fetch
+3.  git branch -r
+4.  git checkout rama1
+5.  git pull origin rama1
+
+
+
+
+M (Modified) → Archivo modificado en rama1
+A (Added) → Archivo agregado en rama1
+D (Deleted) → Archivo eliminado en rama1
+
+
+
 #para el servidor
 python manage.py runserver 127.0.0.1:8081
 
+
+
+
 -----------------------------------------------------------------------------------
-from django.db.models import Prefetch
+Código HTTP	        Causa	                            Acción tomada
+400	                Solicitud incorrecta	            Muestra un mensaje en el formulario.
+401	                No autorizado	                    Redirige a una página de error 401.
+403	                Prohibido	                        Redirige a una página de error 403.
+404	                No encontrado	                    Redirige a una página de error 404.
+500+	            Error en el servidor	            Llama a mi_error_500(request).
+Error de conexión	No se puede conectar con la API	    Muestra una página de error de conexión.
 
 
-------------------------------------------------------------------------------------
 
 # Aeropuerto
 Aeropuerto.objects.prefetch_related(
@@ -538,9 +571,10 @@ Empleado.objects.select_related(
 )
 
 
-curl -X POST "http://0.0.0.0:8000/oauth2/token/" -d "grant_type=password&username=ale&password=ale&client_id=mi_aplicacion&client_secret=mi_clave_secreta"
+http://0.0.0.0:8000/oauth2/applications/
 
-weafixJCm0ZurjQ8uKVMqNKGQfjCbm
+curl -X POST "http://0.0.0.0:8000/oauth2/token/" -d "grant_type=password&username=admin&password=admin&client_id=mi_aplicacion&client_secret=mi_clave_secreta"
 
-de usuraio = 1UMddlv1zukgr5UusiBaT5yGK9tMLl
-de gerente = qA2W2XXPWOTFfI84Mw2ej9jYPToLrz
+
+Funciona
+http://127.0.0.1:8000/api/v1/Aeropuerto/busqueda_simple?textoBusqueda=a
