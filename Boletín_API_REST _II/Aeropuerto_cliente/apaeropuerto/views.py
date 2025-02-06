@@ -120,7 +120,7 @@ def Aeropuerto_busqueda_simple(request):
                 params={'textoBusqueda':formulario.data.get("textoBusqueda")}
             )
             aeropuerto = response.json()
-            return render(request, 'Formularios/Aeropuerto/buscar.html',{"aeropuerto":aeropuerto})
+            return render(request, 'Formularios/Aeropuerto/buscar.html',{"aeropuerto":aeropuerto,"formulario": formulario})
         if("HTTP_REFERER" in request.META):
             return redirect(request.META["HTTP_REFERER"])
         else:
@@ -129,7 +129,7 @@ def Aeropuerto_busqueda_simple(request):
     else:
         formulario = BusquedaAeropuertoForm()
 
-    return render(request, 'Formularios/Aeropuerto/buscar.html',{"aeropuerto":aeropuerto})
+    return render(request, 'Formularios/Aeropuerto/buscar.html',{"formulario": formulario})
 
 
 def Aeropuerto_busqueda_avanzada(request):
@@ -157,7 +157,7 @@ def Aeropuerto_busqueda_avanzada(request):
                 print(" Datos recibidos:", aeropuerto)
 
                 if response.status_code == requests.codes.ok:
-                    return render(request, 'Formularios/Aeropuerto/busqueda_avanzada.html', {"aeropuerto": aeropuerto})
+                    return render(request, 'Formularios/Aeropuerto/busqueda_avanzada.html', {"aeropuerto": aeropuerto,"formulario": formulario})
                 else:
                     return manejar_errores_api(response, request, formulario, "Formularios/Aeropuerto/busqueda_avanzada.html")
 
@@ -194,7 +194,7 @@ def Aerolinea_busqueda_avanzada(request):
                 print(" Datos recibidos:", aerolinea)
 
                 if response.status_code == requests.codes.ok:
-                    return render(request, 'Formularios/Aerolinea/busqueda_avanzada.html', {"aerolinea": aerolinea})
+                    return render(request, 'Formularios/Aerolinea/busqueda_avanzada.html', {"aerolinea": aerolinea,"formulario": formulario})
                 else:
                     return manejar_errores_api(response, request, formulario, "Formularios/Aerolinea/busqueda_avanzada.html")
 
@@ -231,7 +231,7 @@ def Estadisticas_busqueda_avanzada(request):
                 print(" Datos recibidos:", estadisticas)
 
                 if response.status_code == requests.codes.ok:
-                    return render(request, 'Formularios/Estadisticas_vuelo/busqueda_avanzada.html', {"estadisticas": estadisticas})
+                    return render(request, 'Formularios/Estadisticas_vuelo/busqueda_avanzada.html', {"estadisticas": estadisticas,"formulario": formulario})
                 else:
                     return manejar_errores_api(response, request, formulario, "Formularios/Estadisticas_vuelo/busqueda_avanzada.html")
 
@@ -241,6 +241,44 @@ def Estadisticas_busqueda_avanzada(request):
         formulario = BusquedaAvanzadaEstadisticas(None)
 
     return render(request, 'Formularios/Estadisticas_vuelo/busqueda_avanzada.html', {"formulario": formulario})
+
+
+
+def Reserva_busqueda_avanzada(request):
+    if len(request.GET) > 0:
+        formulario = BusquedaAvanzadaReserva(request.GET)
+
+        if formulario.is_valid():
+            try:
+                headers = crear_cabecera()
+                response = requests.get(
+                    BASE_API_URL_local + 'Reservas/busqueda_avanzada',
+                    headers=headers,
+                    params=formulario.cleaned_data
+                )
+
+                #  Detectar formato de respuesta (JSON o XML)
+                content_type = response.headers.get("Content-Type", "")
+                if "application/json" in content_type:
+                    reservas = response.json()
+                elif "application/xml" in content_type:
+                    reservas = ET.fromstring(response.text)
+                else:
+                    reservas = response.text
+
+                print(" Datos recibidos:", reservas)
+
+                if response.status_code == requests.codes.ok:
+                    return render(request, 'Formularios/Reservas/busqueda_avanzada.html', {"reservas": reservas,"formulario": formulario})
+                else:
+                    return manejar_errores_api(response, request, formulario, "Formularios/Reservas/busqueda_avanzada.html")
+
+            except Exception as err:
+                return manejar_excepciones_api(err, request)
+    else:
+        formulario = BusquedaAvanzadaReserva(None)
+
+    return render(request, 'Formularios/Reservas/busqueda_avanzada.html', {"formulario": formulario})
 
 
 

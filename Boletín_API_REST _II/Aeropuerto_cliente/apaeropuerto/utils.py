@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
 import requests
+from requests.exceptions import HTTPError
 from django.shortcuts import render
 
 def manejar_errores_api(response, request, formulario=None, template="errors/error_general.html"):
@@ -13,9 +14,21 @@ def manejar_errores_api(response, request, formulario=None, template="errors/err
     """
     print(f"❌ Error HTTP: {response.status_code}")
     
-    if response.status_code == 400:
-        return render(request, template, {"formulario": formulario, "error": "Solicitud incorrecta."})
-    elif response.status_code == 401:
+    try:
+        response.raise_for_status()
+    except HTTPError as http_err:
+        print(f'Hubo un error en la petición: {http_err}')
+        
+        if response.status_code == 400:
+            errores = response.json()
+            for error in errores:
+                formulario.add_error(error, errores[error])
+            
+            return render(request, template, {"formulario": formulario, "errores": errores})
+        
+        return mi_error_500(request)
+
+    if response.status_code == 401:
         return render(request, 'errors/401.html')  # Acceso no autorizado
     elif response.status_code == 403:
         return render(request, 'errors/403.html')  # Prohibido
@@ -23,7 +36,7 @@ def manejar_errores_api(response, request, formulario=None, template="errors/err
         return render(request, 'errors/404.html')  # No encontrado
     elif response.status_code >= 500:
         return render(request, 'errors/500.html')  # Error interno del servidor
-    
+
     return render(request, template, {"error": "Ocurrió un error inesperado."})
 
 def manejar_excepciones_api(err, request):

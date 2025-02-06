@@ -417,7 +417,7 @@ Esta el usuario gerente que debe poder hace las estadisticas de vuelo.
 
     No es practico lo suyo es crear una funcion rutilizable
 
----------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------Mis cosas----------------------------------------------------------------------
 # comandos :
 
 python3 -m venv myvenv
@@ -452,9 +452,15 @@ git branch -d rama1 = borrar rama (tiene que estar fuera de la rama)
 git merge rama1  = para unir la rama 1 con la rama 2 (estar en la rama que va a recibir los cambios (main))
 git push -u origin nombre-de-la-rama
 
+* subir la rama
+1. git branch
+2. git status
+3. git add .
+4. git commit -m "Subir"
+5. git push -u origin rama1
 
 
-bajar rama
+* bajar rama
 1.  Clono el repositorio
 2.  git fetch
 3.  git branch -r

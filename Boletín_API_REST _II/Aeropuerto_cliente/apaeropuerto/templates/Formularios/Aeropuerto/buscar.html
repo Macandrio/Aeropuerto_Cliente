@@ -10,7 +10,7 @@
 {% endfor %}
 {% endif %}
 <div class="card shadow-lg p-4 bg-white rounded">
-    <h2 class="text-primary text-center mb-4">✈️ Filtros de Búsqueda de Aeropuertos</h2>
+    <h2 class="text-primary text-center mb-4">🔍 Filtros de Búsqueda de Aeropuertos</h2>
     
     <form method="GET" class="mb-4">
         <!-- Búsqueda por Texto -->
@@ -24,45 +24,12 @@
             {% endfor %}
         </div>
 
-        <!-- Selección Múltiple de Ciudades -->
-        <div class="mb-3">
-            <label for="{{ formulario.ciudades.id_for_label }}" class="form-label fw-bold">
-                🏙️ Ciudades Disponibles
-            </label>
-            <select class="form-select" name="{{ formulario.ciudades.html_name }}" id="{{ formulario.ciudades.id_for_label }}" multiple>
-                {% for value, label in formulario.ciudades.field.choices %}
-                    <option value="{{ value }}" {% if value in formulario.ciudades.value %}selected{% endif %}>{{ label }}</option>
-                {% endfor %}
-            </select>
-            <small class="text-muted">Mantén presionada la tecla CTRL (Windows) o CMD (Mac) para seleccionar varias opciones.</small>
-            {% for error in formulario.ciudades.errors %}
-                <div class="text-danger"><small>{{ error }}</small></div>
-            {% endfor %}
-        </div>
-
-        <!-- Selección Múltiple de País -->
-        <div class="mb-3">
-            <label for="{{ formulario.pais.id_for_label }}" class="form-label fw-bold">
-                🌍 País
-            </label>
-            <select class="form-select" name="{{ formulario.pais.html_name }}" id="{{ formulario.pais.id_for_label }}" multiple>
-                {% for value, label in formulario.pais.field.choices %}
-                    <option value="{{ value }}" {% if value in formulario.pais.value %}selected{% endif %}>{{ label }}</option>
-                {% endfor %}
-            </select>
-            <small class="text-muted">Mantén presionada la tecla CTRL (Windows) o CMD (Mac) para seleccionar varias opciones.</small>
-            {% for error in formulario.pais.errors %}
-                <div class="text-danger"><small>{{ error }}</small></div>
-            {% endfor %}
-        </div>
-
         <!-- Botón de Búsqueda -->
-        <button type="submit" class="btn btn-success w-100 fw-bold">
-            🔍 Buscar Aeropuerto
+        <button type="submit" class="btn btn-primary w-100 fw-bold">
+            ✈️ Buscar Aeropuerto
         </button>
     </form>
 </div>
-
 
 
 <h2 class="text-center text-secondary my-4">Resultados de búsqueda</h2>

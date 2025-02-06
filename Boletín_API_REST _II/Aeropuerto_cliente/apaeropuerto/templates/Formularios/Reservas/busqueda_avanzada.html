@@ -12,49 +12,38 @@
 {% endif %}
 
 <div class="card shadow-lg p-4 bg-white rounded">
-    <h2 class="text-primary text-center mb-4">🛫 Filtros de Búsqueda de Aerolíneas</h2>
-    
+    <h2 class="text-primary text-center mb-4">🔍 Filtros de Búsqueda de Reservas</h2>
     <form method="GET" class="mb-4">
-        <!-- Nombre de la Aerolínea -->
+        
+        <!-- Fecha de Reserva -->
         <div class="mb-3">
-            <label for="{{ formulario.nombre.id_for_label }}" class="form-label fw-bold">
-                ✈️ Nombre de la Aerolínea
+            <label for="{{ formulario.fecha_reserva.id_for_label }}" class="form-label fw-bold">
+                📅 Fecha de Reserva
             </label>
-            {{ formulario.nombre }}
-            {% for error in formulario.nombre.errors %}
+            {{ formulario.fecha_reserva }}
+            {% for error in formulario.fecha_reserva.errors %}
                 <div class="text-danger"><small>{{ error }}</small></div>
             {% endfor %}
         </div>
 
-        <!-- Fecha de Fundación -->
+        <!-- Método de Pago -->
         <div class="mb-3">
-            <label for="{{ formulario.fecha_fundacion.id_for_label }}" class="form-label fw-bold">
-                📅 Fecha de Fundación
+            <label for="{{ formulario.metodo_pago.id_for_label }}" class="form-label fw-bold">
+                💳 Método de Pago
             </label>
-            {{ formulario.fecha_fundacion }}
-            {% for error in formulario.fecha_fundacion.errors %}
+            {{ formulario.metodo_pago }}
+            {% for error in formulario.metodo_pago.errors %}
                 <div class="text-danger"><small>{{ error }}</small></div>
             {% endfor %}
         </div>
 
-        <!-- Código de la Aerolínea -->
+        <!-- Estado de Pago -->
         <div class="mb-3">
-            <label for="{{ formulario.codigo.id_for_label }}" class="form-label fw-bold">
-                🔢 Código de la Aerolínea
+            <label for="{{ formulario.estado_de_pago.id_for_label }}" class="form-label fw-bold">
+                ✅ Estado de Pago
             </label>
-            {{ formulario.codigo }}
-            {% for error in formulario.codigo.errors %}
-                <div class="text-danger"><small>{{ error }}</small></div>
-            {% endfor %}
-        </div>
-
-        <!-- País -->
-        <div class="mb-3">
-            <label for="{{ formulario.pais.id_for_label }}" class="form-label fw-bold">
-                🌍 País
-            </label>
-            {{ formulario.pais }}
-            {% for error in formulario.pais.errors %}
+            {{ formulario.estado_de_pago }}
+            {% for error in formulario.estado_de_pago.errors %}
                 <div class="text-danger"><small>{{ error }}</small></div>
             {% endfor %}
         </div>
@@ -70,16 +59,18 @@
 <h2 class="text-center text-secondary my-4">Resultados de búsqueda</h2>
 
 <div class="row">
-    {% if aerolinea %}
-        {% for Aerolinea in aerolinea %}
+    {% if reservas %}
+        {% for reserva in reservas %}
         <div class="col-md-4 mb-4">
             <div class="card h-100">
                 <div class="card-body">
-                    <h5 class="card-title">{{ Aerolinea.nombre }}</h5>
+                    <h5 class="card-title">Reserva ID: {{ reserva.id }}</h5>
                     <p class="card-text">
-                        <strong>fecha fundacion:</strong> {{ Aerolinea.fecha_fundacion }}<br>
-                        <strong>Codigo:</strong> {{ Aerolinea.codigo }}<br>
-                        <strong>Paises:</strong> {{ Aerolinea.pais }}<br>
+                        <strong>Fecha de Reserva:</strong> {{ reserva.fecha_reserva }}<br>
+                        <strong>Código de Descuento:</strong> {{ reserva.codigo_descueto }}<br>
+                        <strong>Método de Pago:</strong> {{ reserva.metodo_pago }}<br>
+                        <strong>Estado de Pago:</strong> {{ reserva.estado_de_pago|yesno:"Pagado,No Pagado" }}<br>
+                        <strong>Pasajero:</strong> {{ reserva.pasajero.id }}<br>
                     </p>
                 </div>
                 <div class="card-footer text-center">
@@ -88,12 +79,12 @@
                         <div class="mb-2">
                             <button type="button" 
                                     class="btn btn-outline-primary"> 
-                                   <span>{% bs_icon 'pencil' %}</span></a>
+                                    <span>{% bs_icon 'pencil' %}</span></a>
                             </button>
                         </div>
                     </div>
                     <div class="mb-2">
-                        <form  method = "post"> 
+                        <form  method="post"> 
                             {% csrf_token %}
                             <button class="btn btn-danger" type="submit">
                                 <span>{% bs_icon 'trash' %}</span>

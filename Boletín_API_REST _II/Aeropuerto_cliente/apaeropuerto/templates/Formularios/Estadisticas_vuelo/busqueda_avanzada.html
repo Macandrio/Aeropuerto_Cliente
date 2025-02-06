@@ -11,36 +11,61 @@
 {% endfor %}
 {% endif %}
 
-<div class="card shadow p-4">
-    <h2 class="text-secondary mb-4">Filtros de búsqueda</h2>
+<div class="card shadow-lg p-4 bg-white rounded">
+    <h2 class="text-primary text-center mb-4">📊 Filtros de Búsqueda Estadísticas de Vuelos</h2>
+    
     <form method="GET" class="mb-4">
-        {{ formulario.fecha_estadisticas.label_tag }}
-        {{ formulario.fecha_estadisticas }}
-        {% for error in formulario.fecha_estadisticas.errors %}
-            <div class="text-danger"><small>{{ error }}</small></div>
-        {% endfor %}
-    
-        {{ formulario.numero_asientos_vendidos.label_tag }}
-        {{ formulario.numero_asientos_vendidos }}
-        {% for error in formulario.numero_asientos_vendidos.errors %}
-            <div class="text-danger"><small>{{ error }}</small></div>
-        {% endfor %}
+        <!-- Fecha de Estadísticas -->
+        <div class="mb-3">
+            <label for="{{ formulario.fecha_estadisticas.id_for_label }}" class="form-label fw-bold">
+                📅 Fecha de Estadísticas
+            </label>
+            {{ formulario.fecha_estadisticas }}
+            {% for error in formulario.fecha_estadisticas.errors %}
+                <div class="text-danger"><small>{{ error }}</small></div>
+            {% endfor %}
+        </div>
 
-        {{ formulario.numero_cancelaciones.label_tag }}
-        {{ formulario.numero_cancelaciones }}
-        {% for error in formulario.numero_cancelaciones.errors %}
-            <div class="text-danger"><small>{{ error }}</small></div>
-        {% endfor %}
+        <!-- Número de Asientos Vendidos -->
+        <div class="mb-3">
+            <label for="{{ formulario.numero_asientos_vendidos.id_for_label }}" class="form-label fw-bold">
+                🎟️ Asientos Vendidos
+            </label>
+            {{ formulario.numero_asientos_vendidos }}
+            {% for error in formulario.numero_asientos_vendidos.errors %}
+                <div class="text-danger"><small>{{ error }}</small></div>
+            {% endfor %}
+        </div>
 
-        {{ formulario.feedback_pasajeros.label_tag }}
-        {{ formulario.feedback_pasajeros }}
-        {% for error in formulario.feedback_pasajeros.errors %}
-            <div class="text-danger"><small>{{ error }}</small></div>
-        {% endfor %}
-    
-        <button type="submit" class="btn btn-primary w-100">Buscar</button>
+        <!-- Número de Cancelaciones -->
+        <div class="mb-3">
+            <label for="{{ formulario.numero_cancelaciones.id_for_label }}" class="form-label fw-bold">
+                ❌ Cancelaciones de Vuelos
+            </label>
+            {{ formulario.numero_cancelaciones }}
+            {% for error in formulario.numero_cancelaciones.errors %}
+                <div class="text-danger"><small>{{ error }}</small></div>
+            {% endfor %}
+        </div>
+
+        <!-- Feedback de Pasajeros -->
+        <div class="mb-3">
+            <label for="{{ formulario.feedback_pasajeros.id_for_label }}" class="form-label fw-bold">
+                🗣️ Feedback de Pasajeros
+            </label>
+            {{ formulario.feedback_pasajeros }}
+            {% for error in formulario.feedback_pasajeros.errors %}
+                <div class="text-danger"><small>{{ error }}</small></div>
+            {% endfor %}
+        </div>
+
+        <!-- Botón de Búsqueda -->
+        <button type="submit" class="btn btn-primary w-100 fw-bold">
+            🔍 Buscar Estadísticas
+        </button>
     </form>
 </div>
+
 
 <h2 class="text-center text-secondary my-4">Resultados de búsqueda</h2>
 
