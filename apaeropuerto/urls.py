@@ -15,4 +15,8 @@ urlpatterns = [
     path('Aerolinea/busqueda_avanzada/', views.Aerolinea_busqueda_avanzada, name='Aerolinea_busqueda_avanzada'),
     path('Estadisticas/busqueda_avanzada/', views.Estadisticas_busqueda_avanzada, name='Estadisticas_busqueda_avanzada'),
     path('Reservas/busqueda_avanzada/', views.Reserva_busqueda_avanzada, name='Reserva_busqueda_avanzada'),
+
+
+    #Crear
+    path('Aeropuerto/Crear/', views.Aeropuerto_crear, name='Aeropuerto_crear'),
 ]

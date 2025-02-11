@@ -8,7 +8,7 @@ import environ
 import os
 from pathlib import Path
 import xml.etree.ElementTree as ET
-from .utils import manejar_errores_api, manejar_excepciones_api  # Importar las funciones
+from .utils import *  # Importar las funciones
 
 
 
@@ -18,8 +18,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'), True)
 env = environ.Env()
 
-BASE_API_URL = "https://macandrio.pythonanywhere.com/api/v1/"
-BASE_API_URL_local = "http://127.0.0.1:8000/api/v1/"
+#BASE_API_URL = env("BASE_API_URL")
+#version = env("version")
+
+BASE_API_URL = "http://127.0.0.1:8000"
+version = "/api/v1/"
+
+def crear_cabecera():
+    return {
+        'Authorization': 'Bearer '+env("Admin"),
+        "Content-Type": "application/json"
+        }
+
+
+
 
 def index(request):
     return render(request, 'index.html')
@@ -37,7 +49,7 @@ def aeropuerto_listar_api(request):
         headers = {'Authorization': 'Bearer '+env('PASAJERO')}
 
 
-    response = requests.get(BASE_API_URL + 'Aeropuerto', headers=headers)
+    response = requests.get(BASE_API_URL + version + + 'Aeropuerto', headers=headers)
     aeropuertos = response.json()
     return render(request, 'paginas/aeropuerto_list.html', {"aeropuertos": aeropuertos})
 
@@ -51,10 +63,9 @@ def aerolinea_listar_api(request):
             headers = {'Authorization': 'Bearer '+env('GERENTE')}
     else:
         headers = {'Authorization': 'Bearer '+env('PASAJERO')}
-    response = requests.get(BASE_API_URL + 'Aerolinea', headers=headers)
+    response = requests.get(BASE_API_URL + version + + 'Aerolinea', headers=headers)
     aerolineas = response.json()
     return render(request, 'paginas/aerolinea_list.html', {'aerolineas': aerolineas})
-
 
 def vuelo_listar_api(request):
     if (request.user.is_anonymous==False):     
@@ -66,7 +77,7 @@ def vuelo_listar_api(request):
             headers = {'Authorization': 'Bearer '+env('GERENTE')}
     else:
         headers = {'Authorization': 'Bearer '+env('PASAJERO')}
-    response = requests.get(BASE_API_URL + 'Vuelo', headers=headers)
+    response = requests.get(BASE_API_URL + version + + 'Vuelo', headers=headers)
     vuelos = response.json()
     return render(request, 'paginas/vuelo_list.html', {'vuelos': vuelos})
 
@@ -80,10 +91,9 @@ def reserva_listar_api(request):
             headers = {'Authorization': 'Bearer '+env('GERENTE')}
     else:
         headers = {'Authorization': 'Bearer '+env('PASAJERO')}
-    response = requests.get(BASE_API_URL + 'Reserva', headers=headers)
+    response = requests.get(BASE_API_URL + version + + 'Reserva', headers=headers)
     reservas = response.json()
     return render(request, 'paginas/reserva_list.html', {'reservas': reservas})
-
 
 def vueloaerolinea_listar_api(request):
     if (request.user.is_anonymous==False):     
@@ -95,18 +105,12 @@ def vueloaerolinea_listar_api(request):
             headers = {'Authorization': 'Bearer '+env('GERENTE')}
     else:
         headers = {'Authorization': 'Bearer '+env('PASAJERO')}
-    response = requests.get(BASE_API_URL + 'Vueloaerolinea', headers=headers)
+    response = requests.get(BASE_API_URL + version + + 'Vueloaerolinea', headers=headers)
     vueloaerolinea = response.json()
     return render(request, 'paginas/vuelo_aerolinea_list.html', {'vueloaerolinea': vueloaerolinea})
 
 
-#------------------------------------------------Formularios------------------------------------------------------------
-def crear_cabecera():
-    return {
-        'Authorization': 'Bearer '+env("Admin"),
-        "Content-Type": "application/json"
-        }
-
+#------------------------------------------------Formularios Buscar-----------------------------------------------------------------------------
 
 def Aeropuerto_busqueda_simple(request):
     aeropuerto = []
@@ -115,7 +119,7 @@ def Aeropuerto_busqueda_simple(request):
         if formulario.is_valid():
             headers = crear_cabecera()
             response = requests.get(
-                BASE_API_URL_local + 'Aeropuerto/busqueda_simple',
+                BASE_API_URL + version + 'Aeropuerto/busqueda_simple',
                 headers=headers,
                 params={'textoBusqueda':formulario.data.get("textoBusqueda")}
             )
@@ -140,21 +144,13 @@ def Aeropuerto_busqueda_avanzada(request):
             try:
                 headers = crear_cabecera()
                 response = requests.get(
-                    BASE_API_URL_local + 'Aeropuerto/busqueda_avanzada',
+                    BASE_API_URL + version + 'Aeropuerto/busqueda_avanzada',
                     headers=headers,
                     params=formulario.cleaned_data
                 )
 
                 #  Detectar formato de respuesta (JSON o XML)
-                content_type = response.headers.get("Content-Type", "")
-                if "application/json" in content_type:
-                    aeropuerto = response.json()
-                elif "application/xml" in content_type:
-                    aeropuerto = ET.fromstring(response.text)  # Convertir XML a objeto
-                else:
-                    aeropuerto = response.text  # Si el formato es desconocido, tratarlo como texto
-
-                print(" Datos recibidos:", aeropuerto)
+                aeropuerto = transformar_respuestas(response)
 
                 if response.status_code == requests.codes.ok:
                     return render(request, 'Formularios/Aeropuerto/busqueda_avanzada.html', {"aeropuerto": aeropuerto,"formulario": formulario})
@@ -177,21 +173,13 @@ def Aerolinea_busqueda_avanzada(request):
             try:
                 headers = crear_cabecera()
                 response = requests.get(
-                    BASE_API_URL_local + 'Aerolinea/busqueda_avanzada',
+                    BASE_API_URL + version + 'Aerolinea/busqueda_avanzada',
                     headers=headers,
                     params=formulario.cleaned_data
                 )
 
                 #  Detectar formato de respuesta (JSON o XML)
-                content_type = response.headers.get("Content-Type", "")
-                if "application/json" in content_type:
-                    aerolinea = response.json()
-                elif "application/xml" in content_type:
-                    aerolinea = ET.fromstring(response.text)
-                else:
-                    aerolinea = response.text
-
-                print(" Datos recibidos:", aerolinea)
+                aerolinea = transformar_respuestas(response)
 
                 if response.status_code == requests.codes.ok:
                     return render(request, 'Formularios/Aerolinea/busqueda_avanzada.html', {"aerolinea": aerolinea,"formulario": formulario})
@@ -214,21 +202,13 @@ def Estadisticas_busqueda_avanzada(request):
             try:
                 headers = crear_cabecera()
                 response = requests.get(
-                    BASE_API_URL_local + 'Estadisticas/busqueda_avanzada',
+                    BASE_API_URL + version + 'Estadisticas/busqueda_avanzada',
                     headers=headers,
                     params=formulario.cleaned_data
                 )
 
                 #  Detectar formato de respuesta (JSON o XML)
-                content_type = response.headers.get("Content-Type", "")
-                if "application/json" in content_type:
-                    estadisticas = response.json()
-                elif "application/xml" in content_type:
-                    estadisticas = ET.fromstring(response.text)
-                else:
-                    estadisticas = response.text
-
-                print(" Datos recibidos:", estadisticas)
+                estadisticas = transformar_respuestas(response)
 
                 if response.status_code == requests.codes.ok:
                     return render(request, 'Formularios/Estadisticas_vuelo/busqueda_avanzada.html', {"estadisticas": estadisticas,"formulario": formulario})
@@ -243,7 +223,6 @@ def Estadisticas_busqueda_avanzada(request):
     return render(request, 'Formularios/Estadisticas_vuelo/busqueda_avanzada.html', {"formulario": formulario})
 
 
-
 def Reserva_busqueda_avanzada(request):
     if len(request.GET) > 0:
         formulario = BusquedaAvanzadaReserva(request.GET)
@@ -252,19 +231,13 @@ def Reserva_busqueda_avanzada(request):
             try:
                 headers = crear_cabecera()
                 response = requests.get(
-                    BASE_API_URL_local + 'Reservas/busqueda_avanzada',
+                    BASE_API_URL + version + 'Reservas/busqueda_avanzada',
                     headers=headers,
                     params=formulario.cleaned_data
                 )
 
                 #  Detectar formato de respuesta (JSON o XML)
-                content_type = response.headers.get("Content-Type", "")
-                if "application/json" in content_type:
-                    reservas = response.json()
-                elif "application/xml" in content_type:
-                    reservas = ET.fromstring(response.text)
-                else:
-                    reservas = response.text
+                reservas = transformar_respuestas(response)
 
                 print(" Datos recibidos:", reservas)
 
@@ -280,9 +253,41 @@ def Reserva_busqueda_avanzada(request):
 
     return render(request, 'Formularios/Reservas/busqueda_avanzada.html', {"formulario": formulario})
 
+#------------------------------------------------Formularios Crear-----------------------------------------------------------------------------
+
+def Aeropuerto_crear(request):
+    
+    if (request.method == "POST"):
+        try:
+            formulario = AeropuertoFrom(request.POST)
+
+            headers =  crear_cabecera
+
+            datos = formulario.data.copy()
+            datos["nombre"] = request.POST.getlist("nombre")
+            datos["ciudad"] = request.POST.getlist("ciudad")
+            datos["pais"] = request.POST.getlist("pais")
+
+            
+            response = requests.post(
+                BASE_API_URL + version +'Aeropuerto/Crear',
+                headers=headers,
+                data=json.dumps(datos)
+            )
+
+            if response.status_code == requests.codes.ok:
+                return redirect("Formulario/Aeropuerto/busqueda_avanzada")
+            else:
+                return manejar_errores_api(response, request, formulario, "Formularios/Reservas/busqueda_avanzada.html")
+
+        except Exception as err:
+            return manejar_excepciones_api(err, request)  
+    else:
+         formulario = AeropuertoFrom(None)
+    return render(request, 'Formulario/Aeropuerto/create.html',{"formulario":formulario})
 
 
-#------------------------------------------------------Páginas de Error-----------------------------------------------------------------------------
+#------------------------------------------------Páginas de Error-----------------------------------------------------------------------------
 
 
 

@@ -2,9 +2,11 @@ from django import forms
 from .models import *
 from datetime import date
 import datetime
+from .helper import helper
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-    
+
+#---------------------------------------------------------------------------------------------------------------------------------   
 #Aeropuerto
 
 class BusquedaAeropuertoForm(forms.Form):
@@ -64,9 +66,52 @@ class BusquedaAvanzadaAeropuertoForm(forms.Form):
         )
                                )
     
+#Crear Aeropuerto
 
-from django import forms
+class AeropuertoFrom(forms.Form):
+    nombre = forms.CharField(label="Nombre del Aeropuerto",
+                             required=True, 
+                             max_length=200,
+                             help_text="200 caracteres como máximo")
+    
+    CIUDADES = [
+    ("", "Ninguno"),
+    ("ES", "Madrid"),
+    ("FR", "París"),
+    ("IT", "Roma"),
+    ("DE", "Berlín"),
+    ("PT", "Lisboa"),
+    ("NL", "Ámsterdam"),
+    ("BE", "Bruselas"),
+    ("SE", "Estocolmo"),
+    ("AT", "Viena"),
+    ("CH", "Ginebra"),
+    ]
 
+    PAISES = [
+    ("", "Ninguno"),
+    ("ES", "España"),
+    ("FR", "Francia"),
+    ("IT", "Italia"),
+    ("DE", "Alemania"),
+    ("PT", "Portugal"),
+    ("NL", "Países Bajos"),
+    ("BE", "Bélgica"),
+    ("SE", "Suecia"),
+    ("AT", "Austria"),
+    ("CH", "Suiza"),
+    ]
+
+    ciudad = forms.ChoiceField(choices=CIUDADES,
+                               initial="")
+    
+    pais = forms.ChoiceField(choices=CIUDADES,
+                               initial="")
+    
+    capacidad_maxima = forms.IntegerField()
+        
+#--------------------------------------------------------------------------------------------------------------------
+# Aerolinea
 class BusquedaAvanzadaAerolineaForm(forms.Form):
 
     paises = [

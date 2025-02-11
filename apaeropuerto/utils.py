@@ -3,6 +3,8 @@ import requests
 from requests.exceptions import HTTPError
 from django.shortcuts import render
 
+#---------------------------------------Manejar_Errores--------------------------------------------------------------
+
 def manejar_errores_api(response, request, formulario=None, template="errors/error_general.html"):
     """
     Maneja los errores HTTP al hacer peticiones a la API REST.
@@ -26,7 +28,7 @@ def manejar_errores_api(response, request, formulario=None, template="errors/err
             
             return render(request, template, {"formulario": formulario, "errores": errores})
         
-        return mi_error_500(request)
+        return render(request, 'errors/500.html')
 
     if response.status_code == 401:
         return render(request, 'errors/401.html')  # Acceso no autorizado
@@ -52,3 +54,15 @@ def manejar_excepciones_api(err, request):
         return render(request, 'errors/conexion_error.html')
     
     return render(request, 'errors/error_general.html')
+
+#---------------------------------------Transformar_Respuesta--------------------------------------------------------------
+
+def transformar_respuestas(response):
+    content_type = response.headers.get("Content-Type", "")
+    if "application/json" in content_type:
+        formato = response.json()
+    elif "application/xml" in content_type:
+        formato = ET.fromstring(response.text)
+    else:
+        formato = response.text
+    return formato
