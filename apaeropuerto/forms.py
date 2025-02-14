@@ -7,14 +7,13 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
 #---------------------------------------------------------------------------------------------------------------------------------   
-#Aeropuerto
+#Buscar Aeropuerto
 
 class BusquedaAeropuertoForm(forms.Form):
     textoBusqueda = forms.CharField(required=True,widget=forms.TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Nombre...',
             }))
-
 
 class BusquedaAvanzadaAeropuertoForm(forms.Form):
     
@@ -70,9 +69,9 @@ class BusquedaAvanzadaAeropuertoForm(forms.Form):
 
 class AeropuertoFrom(forms.Form):
     nombre = forms.CharField(label="Nombre del Aeropuerto",
-                             required=True, 
-                             max_length=200,
-                             help_text="200 caracteres como máximo")
+                            required=False, 
+                            max_length=200,
+                            help_text="200 caracteres como máximo")
     
     CIUDADES = [
     ("", "Ninguno"),
@@ -102,16 +101,24 @@ class AeropuertoFrom(forms.Form):
     ("CH", "Suiza"),
     ]
 
-    ciudad = forms.ChoiceField(choices=CIUDADES,
+    ciudades = forms.ChoiceField(choices=CIUDADES,
+                               required=False, 
                                initial="")
     
     pais = forms.ChoiceField(choices=CIUDADES,
+                             required=False, 
                                initial="")
     
-    capacidad_maxima = forms.IntegerField()
+    capacidad_maxima = forms.IntegerField(
+                                label='Capacidad del aeropueto',
+                                required=False, 
+                                widget=forms.NumberInput(attrs={
+                                                        'class': 'form-control',
+                                                        'placeholder': 'Ingrese la capacidad máxima'
+                                                    }))
         
-#--------------------------------------------------------------------------------------------------------------------
-# Aerolinea
+#---------------------------------------------Aerolinea-----------------------------------------------------------------------
+
 class BusquedaAvanzadaAerolineaForm(forms.Form):
 
     paises = [
@@ -158,6 +165,7 @@ class BusquedaAvanzadaAerolineaForm(forms.Form):
         })
     )
 
+#---------------------------------------------Estadisticas-----------------------------------------------------------------------
 
 
 class BusquedaAvanzadaEstadisticas(forms.Form):
@@ -195,7 +203,8 @@ class BusquedaAvanzadaEstadisticas(forms.Form):
             })
         )
 
-    
+#---------------------------------------------Reserva-----------------------------------------------------------------------
+
 
 class BusquedaAvanzadaReserva(forms.Form):
     

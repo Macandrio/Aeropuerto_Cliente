@@ -2,13 +2,13 @@ from django.shortcuts import render,redirect
 from .forms import *
 from django.contrib import messages
 import json
-from requests.exceptions import HTTPError
 import requests
 import environ
 import os
 from pathlib import Path
 import xml.etree.ElementTree as ET
 from .utils import *  # Importar las funciones
+from .helper import *
 
 
 
@@ -18,11 +18,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'), True)
 env = environ.Env()
 
-#BASE_API_URL = env("BASE_API_URL")
-#version = env("version")
+BASE_API_URL = env("BASE_API_URL")
+version = env("version")
 
-BASE_API_URL = "http://127.0.0.1:8000"
-version = "/api/v1/"
 
 def crear_cabecera():
     return {
@@ -49,7 +47,7 @@ def aeropuerto_listar_api(request):
         headers = {'Authorization': 'Bearer '+env('PASAJERO')}
 
 
-    response = requests.get(BASE_API_URL + version + + 'Aeropuerto', headers=headers)
+    response = requests.get(BASE_API_URL + version + 'Aeropuerto', headers=headers)
     aeropuertos = response.json()
     return render(request, 'paginas/aeropuerto_list.html', {"aeropuertos": aeropuertos})
 
@@ -63,7 +61,7 @@ def aerolinea_listar_api(request):
             headers = {'Authorization': 'Bearer '+env('GERENTE')}
     else:
         headers = {'Authorization': 'Bearer '+env('PASAJERO')}
-    response = requests.get(BASE_API_URL + version + + 'Aerolinea', headers=headers)
+    response = requests.get(BASE_API_URL + version + 'Aerolinea', headers=headers)
     aerolineas = response.json()
     return render(request, 'paginas/aerolinea_list.html', {'aerolineas': aerolineas})
 
@@ -77,7 +75,7 @@ def vuelo_listar_api(request):
             headers = {'Authorization': 'Bearer '+env('GERENTE')}
     else:
         headers = {'Authorization': 'Bearer '+env('PASAJERO')}
-    response = requests.get(BASE_API_URL + version + + 'Vuelo', headers=headers)
+    response = requests.get(BASE_API_URL + version + 'Vuelo', headers=headers)
     vuelos = response.json()
     return render(request, 'paginas/vuelo_list.html', {'vuelos': vuelos})
 
@@ -91,7 +89,7 @@ def reserva_listar_api(request):
             headers = {'Authorization': 'Bearer '+env('GERENTE')}
     else:
         headers = {'Authorization': 'Bearer '+env('PASAJERO')}
-    response = requests.get(BASE_API_URL + version + + 'Reserva', headers=headers)
+    response = requests.get(BASE_API_URL + version + 'Reserva', headers=headers)
     reservas = response.json()
     return render(request, 'paginas/reserva_list.html', {'reservas': reservas})
 
@@ -105,7 +103,7 @@ def vueloaerolinea_listar_api(request):
             headers = {'Authorization': 'Bearer '+env('GERENTE')}
     else:
         headers = {'Authorization': 'Bearer '+env('PASAJERO')}
-    response = requests.get(BASE_API_URL + version + + 'Vueloaerolinea', headers=headers)
+    response = requests.get(BASE_API_URL + version + 'Vueloaerolinea', headers=headers)
     vueloaerolinea = response.json()
     return render(request, 'paginas/vuelo_aerolinea_list.html', {'vueloaerolinea': vueloaerolinea})
 
@@ -261,12 +259,13 @@ def Aeropuerto_crear(request):
         try:
             formulario = AeropuertoFrom(request.POST)
 
-            headers =  crear_cabecera
+            headers =  crear_cabecera()
 
             datos = formulario.data.copy()
-            datos["nombre"] = request.POST.getlist("nombre")
-            datos["ciudad"] = request.POST.getlist("ciudad")
-            datos["pais"] = request.POST.getlist("pais")
+            datos["nombre"] = request.POST.get("nombre")
+            datos["ciudades"] = request.POST.get("ciudades")
+            datos["pais"] = request.POST.get("pais")
+            datos["capacidad_maxima"] = request.POST.get("capacidad_maxima")
 
             
             response = requests.post(
@@ -276,23 +275,22 @@ def Aeropuerto_crear(request):
             )
 
             if response.status_code == requests.codes.ok:
-                return redirect("Formulario/Aeropuerto/busqueda_avanzada")
+                #messages.success(request, response.json())  # ✅ Mostrar mensaje en la plantilla
+                return redirect("aeropuerto_listar_api")
             else:
-                return manejar_errores_api(response, request, formulario, "Formularios/Reservas/busqueda_avanzada.html")
+                return manejar_errores_api(response, request, formulario, "Formularios/Aeropuerto/create.html")
 
         except Exception as err:
             return manejar_excepciones_api(err, request)  
     else:
          formulario = AeropuertoFrom(None)
-    return render(request, 'Formulario/Aeropuerto/create.html',{"formulario":formulario})
+    return render(request, 'Formularios/Aeropuerto/create.html',{"formulario":formulario})
 
 
 #------------------------------------------------Páginas de Error-----------------------------------------------------------------------------
 
 
 
-def index(request): 
-    return render(request, 'index.html')
 def mi_error_400(request,exception=None):
     return render(request,"errors/400.html",None,None,400)
 
