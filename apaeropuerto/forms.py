@@ -67,7 +67,7 @@ class BusquedaAvanzadaAeropuertoForm(forms.Form):
     
 #Crear Aeropuerto
 
-class AeropuertoFrom(forms.Form):
+class AeropuertoForm(forms.Form):
     nombre = forms.CharField(label="Nombre del Aeropuerto",
                             required=False, 
                             max_length=200,
@@ -116,7 +116,13 @@ class AeropuertoFrom(forms.Form):
                                                         'class': 'form-control',
                                                         'placeholder': 'Ingrese la capacidad máxima'
                                                     }))
-        
+
+class AeropuertoActualizarNombreForm(forms.Form):
+    nombre = forms.CharField(label="Nombre del Aeropuerto",
+                             required=True, 
+                             max_length=200,
+                             help_text="200 caracteres como máximo")
+            
 #---------------------------------------------Aerolinea-----------------------------------------------------------------------
 
 class BusquedaAvanzadaAerolineaForm(forms.Form):

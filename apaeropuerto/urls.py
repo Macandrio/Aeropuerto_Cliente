@@ -27,4 +27,7 @@ urlpatterns = [
 
     #Editar
     path('aeropuerto/editar/<int:aeropuerto_id>/', views.aeropuerto_editar, name="aeropuerto_editar"),
+
+    #Actualizar
+    path('aeropuerto/actualizar/nombre/<int:aeropuerto_id>',views.Aeropuerto_actualizar_nombre,name='Aeropuerto_actualizar_nombre'),
 ]

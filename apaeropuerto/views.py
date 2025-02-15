@@ -258,7 +258,7 @@ def Aeropuerto_crear(request):
     
     if (request.method == "POST"):
         try:
-            formulario = AeropuertoFrom(request.POST)
+            formulario = AeropuertoForm(request.POST)
 
             headers =  crear_cabecera()
 
@@ -284,7 +284,7 @@ def Aeropuerto_crear(request):
         except Exception as err:
             return manejar_excepciones_api(err, request)  
     else:
-         formulario = AeropuertoFrom(None)
+         formulario = AeropuertoForm(None)
     return render(request, 'Formularios/Aeropuerto/create.html',{"formulario":formulario})
 
 
@@ -310,7 +310,7 @@ def aeropuerto_editar(request,aeropuerto_id):
     aeropuerto = helper.obtener_Aeropuerto(aeropuerto_id) 
 
     #Crear el Formulario con Datos Iniciales
-    formulario = AeropuertoFrom(datosFormulario,
+    formulario = AeropuertoForm(datosFormulario,
             initial={
                 'nombre': aeropuerto['nombre'],
                 'ciudades': aeropuerto["ciudades"],
@@ -321,7 +321,7 @@ def aeropuerto_editar(request,aeropuerto_id):
 
     # ✅ Si el usuario envió un formulario (POST), procesamos los datos
     if (request.method == "POST"):
-        formulario = AeropuertoFrom(request.POST)
+        formulario = AeropuertoForm(request.POST)
         datos = request.POST.copy()
         
         
@@ -352,6 +352,57 @@ def aeropuerto_editar(request,aeropuerto_id):
             else:
                 return manejar_errores_api(request,cliente.codigoRespuesta)
     return render(request, 'Formularios/Aeropuerto/editar.html',{"formulario":formulario,"aeropuerto":aeropuerto})
+
+
+#------------------------------------------------Formularios_Actualizar----------------------------------------------------------------------
+
+def Aeropuerto_actualizar_nombre(request,aeropuerto_id):
+   
+    datosFormulario = None
+    
+    if request.method == "POST":
+        datosFormulario = request.POST
+    
+    aeropuerto = helper.obtener_Aeropuerto(aeropuerto_id)
+    formulario = AeropuertoActualizarNombreForm(datosFormulario,
+            initial={
+                'nombre': aeropuerto['nombre'],
+            }
+    )
+    if (request.method == "POST"):
+        try:
+            formulario = AeropuertoActualizarNombreForm(request.POST)
+            headers = crear_cabecera()
+            datos = request.POST.copy()
+            response = requests.patch(
+                BASE_API_URL + version + 'Aeropuerto/actualizar/nombre/'+str(aeropuerto_id),
+                headers=headers,
+                data=json.dumps(datos)
+            )
+            if(response.status_code == requests.codes.ok):
+                return redirect("mostrar_aeropuerto",aeropuerto_id=aeropuerto_id)
+            else:
+                print(response.status_code)
+                response.raise_for_status()
+
+        except HTTPError as http_err:
+            print(f'Hubo un error en la petición: {http_err}')
+
+            if(response.status_code == 400):
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error,errores[error])
+                return render(request, 
+                            'Formularios/Aeropuerto/actualizar_nombre.html',
+                            {"formulario":formulario,"aeropuerto":aeropuerto})
+            else:
+                return mi_error_500(request)
+        except Exception as err:
+            print(f'Ocurrió un error: {err}')
+            return mi_error_500(request)
+    return render(request, 'Formularios/Aeropuerto/actualizar_nombre.html',{"formulario":formulario,"aeropuerto":aeropuerto})
+
+
 
 #------------------------------------------------Páginas de Error-----------------------------------------------------------------------------
 
