@@ -64,8 +64,6 @@ class BusquedaAvanzadaAeropuertoForm(forms.Form):
         }
         )
                                )
-    
-#Crear Aeropuerto
 
 class AeropuertoForm(forms.Form):
     nombre = forms.CharField(label="Nombre del Aeropuerto",

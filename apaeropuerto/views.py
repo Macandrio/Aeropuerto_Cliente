@@ -47,7 +47,6 @@ def aeropuerto_listar_api(request):
     else:
         headers = {'Authorization': 'Bearer '+env('PASAJERO')}
 
-
     response = requests.get(BASE_API_URL + version + 'Aeropuerto', headers=headers)
     aeropuertos = response.json()
     return render(request, 'paginas/aeropuerto_list.html', {"aeropuertos": aeropuertos})
@@ -403,6 +402,28 @@ def Aeropuerto_actualizar_nombre(request,aeropuerto_id):
     return render(request, 'Formularios/Aeropuerto/actualizar_nombre.html',{"formulario":formulario,"aeropuerto":aeropuerto})
 
 
+#------------------------------------------------Formularios_Eliminar----------------------------------------------------------------------
+
+
+def Aeropuerto_eliminar(request,aeropuerto_id):
+    try:
+        headers = crear_cabecera()
+        response = requests.delete(
+           BASE_API_URL + version + 'Aeropuerto/eliminar/'+str(aeropuerto_id),
+            headers=headers,
+        )
+
+        if(response.status_code == requests.codes.ok):
+            mensaje = response.text.strip()  # ✅ Extraer el mensaje de la API sin validaciones
+            messages.success(request, mensaje)
+            return redirect("aeropuerto_listar_api")
+        else:
+            print(response.status_code)
+            response.raise_for_status()
+    except Exception as err:
+        print(f'Ocurrió un error: {err}')
+        return mi_error_500(request)
+    return redirect('aeropuerto_listar_api')
 
 #------------------------------------------------Páginas de Error-----------------------------------------------------------------------------
 

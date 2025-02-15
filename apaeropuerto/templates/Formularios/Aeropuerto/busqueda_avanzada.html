@@ -82,6 +82,7 @@
                 </div>
                 <div class="card-footer text-center">
                     {% load bootstrap_icons %}
+                    <!-- Botón Actualizar Actualizar -->
                     <div class="row btn-group">
                         <div class="mb-2">
                             <button type="button" 
@@ -91,15 +92,16 @@
                         </div>
                     </div>
                     <div class="mb-2">
-                        <form  method = "post"> 
+                        <!-- Botón Elimninar -->
+                        <form action = "{% url 'Aeropuerto_eliminar' aeropuertoo.id %}"  method = "post"> 
                             {% csrf_token %}
                             <button class="btn btn-danger" type="submit">
                                 <span>{% bs_icon 'trash' %}</span>
                             </button>
-                            <!-- Botón Actualizar Nombre -->
                         <div class="mb-2">
                         </div> 
                         </form>
+                        <!-- Botón Actualizar Nombre -->
                         <button type="button" class="btn btn-outline-warning"> 
                             <a href="{% url 'Aeropuerto_actualizar_nombre' aeropuertoo.id %}">
                                 <span>{% bs_icon 'pencil-square' %}</span> Actualizar Nombre

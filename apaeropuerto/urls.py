@@ -30,4 +30,8 @@ urlpatterns = [
 
     #Actualizar
     path('aeropuerto/actualizar/nombre/<int:aeropuerto_id>',views.Aeropuerto_actualizar_nombre,name='Aeropuerto_actualizar_nombre'),
+
+
+    #Borrar
+    path('Aeropuerto/eliminar/<int:aeropuerto_id>',views.Aeropuerto_eliminar, name='Aeropuerto_eliminar'),
 ]
