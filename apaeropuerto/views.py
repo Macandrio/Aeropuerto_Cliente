@@ -286,6 +286,45 @@ def Aeropuerto_crear(request):
          formulario = AeropuertoForm(None)
     return render(request, 'Formularios/Aeropuerto/create.html',{"formulario":formulario})
 
+def Aerolinea_crear(request):
+    
+    if (request.method == "POST"):
+        try:
+            formulario = AerolineaForm(request.POST)
+
+            headers =  crear_cabecera()
+
+            datos = formulario.data.copy()
+            datos["aeropuerto"] = request.POST.getlist("aeropuerto")
+
+            datos["nombre"] = request.POST.get("nombre")
+            datos["codigo"] = request.POST.get("codigo")
+            datos["fecha_fundacion"] = str(
+                                            datetime.date(year=int(datos['fecha_fundacion_year']),
+                                                        month=int(datos['fecha_fundacion_month']),
+                                                        day=int(datos['fecha_fundacion_day']))
+                                             )
+            datos["pais"] = request.POST.get("pais")
+            
+
+            
+            response = requests.post(
+                BASE_API_URL + version +'Aerolinea/Crear',
+                headers=headers,
+                data=json.dumps(datos)
+            )
+
+            if response.status_code == requests.codes.ok:
+                messages.success(request, response.json())  # ✅ Mostrar mensaje en la plantilla
+                return redirect("aerolinea_listar_api")
+            else:
+                return manejar_errores_api(response, request, formulario, "Formularios/Aerolinea/create.html")
+
+        except Exception as err:
+            return manejar_excepciones_api(err, request)  
+    else:
+         formulario = AerolineaForm(None)
+    return render(request, 'Formularios/Aerolinea/create.html',{"formulario":formulario})
 
 #------------------------------------------------Formularios_Obtener-----------------------------------------------------------------------------
 

@@ -23,6 +23,8 @@ urlpatterns = [
 
     #Crear
     path('Aeropuerto/Crear/', views.Aeropuerto_crear, name='Aeropuerto_crear'),
+    path('Aerolinea/Crear/', views.Aerolinea_crear, name='Aerolinea_crear'),
+    
 
 
     #Editar

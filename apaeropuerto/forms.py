@@ -103,7 +103,7 @@ class AeropuertoForm(forms.Form):
                                required=False, 
                                initial="")
     
-    pais = forms.ChoiceField(choices=CIUDADES,
+    pais = forms.ChoiceField(choices=PAISES,
                              required=False, 
                                initial="")
     
@@ -168,6 +168,43 @@ class BusquedaAvanzadaAerolineaForm(forms.Form):
             'class': 'form-control'
         })
     )
+
+class AerolineaForm(forms.Form):
+    nombre = forms.CharField(label="Nombre del Aeropuerto",
+                            required=False, 
+                            max_length=200,
+                            help_text="200 caracteres como máximo")
+    
+    paises = [
+        ("", "Ninguno"),
+        ("ES", "España"),
+        ("EN", "Inglaterra"),
+        ("FR", "Francia"),
+        ("IT", "Italia"),
+    ]
+    
+    pais = forms.ChoiceField(choices=paises,
+                             required=False, 
+                               initial="")
+    
+    codigo = forms.CharField(label="codigo de la Aerolinea",
+                            required=False, 
+                            max_length=10,
+                            help_text="10 caracteres como máximo")
+    fecha_fundacion = forms.DateField(label="Fecha Publicación",
+                                        initial=datetime.date.today,
+                                        widget= forms.SelectDateWidget(years=range(1990,2025))
+                                        )
+    def __init__(self, *args, **kwargs):
+        
+        super(AerolineaForm, self).__init__(*args, **kwargs)
+        
+        aeropuertosDisponibles = helper.obtener_Aeropuertos()
+        self.fields["aeropuerto"] = forms.ChoiceField(
+            choices=aeropuertosDisponibles,
+            widget=forms.Select,
+            #required=True,
+        )
 
 #---------------------------------------------Estadisticas-----------------------------------------------------------------------
 

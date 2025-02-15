@@ -417,6 +417,31 @@ Esta el usuario gerente que debe poder hace las estadisticas de vuelo.
 
     No es practico lo suyo es crear una funcion rutilizable
 
+
+---------------------------------------------------------------------------------------------------------------------------
+# Tema Api Res III:
+
+* Realizar las operaciones de POST, PUT, PATCH y DELETE de un modelo, con sus validaciones(al menos 3 campos), control de errores y respuestas.(1 punto ,0,25:POST, 0,25: PUT, 0,25:PATCH, 0,25-DELETE)
+
+Realizar las operaciones de POST, PUT, PATCH y DELETE de un modelo con relaciones ManyToOne con sus validaciones(al menos 3 campos), control de errores y respuestas.(1 punto ,0,25:POST, 0,25: PUT, 0,25:PATCH, 0,25-DELETE)
+
+Realizar las operaciones de POST, PUT, PATCH y DELETE de un modelo con una relacion ManyToMany distinto al anterior,con sus validaciones(al menos 3 campos), control de errores y respuestas.(1 punto ,0,25:POST, 0,25: PUT, 0,25:PATCH, 0,25-DELETE)
+
+Realizar las operaciones de POST, PUT, PATCH y DELETE de un modelo con relaciones ManyToMany con tabla intermedia distinto al anterior, con sus validaciones(al menos 3 campos), control de errores y respuestas.(1 punto ,0,25:POST, 0,25: PUT, 0,25:PATCH, 0,25-DELETE)
+
+Incluir mensajes en la aplicación de cliente, para indicar que se ha realizado cada operación correctamente (1 punto)
+
+* Controlar correctamente los errores tanto en cliente como en la API, para que aparezca por consola siempre el error que se produce, pero por la aplicación te rediriga a las páginas de errores correspondiente(1 punto)
+
+* Refactorizar el código, para que sólo se controle errores, se hagan las peticiones y se gestionen las respuesta desde la clase helper(1 punto)
+
+Realizar las 4 operaciones POST, PUT, PATCH y DELETE, desde otra aplicación que no sea el cliente de DJANGO, por ejemplo POSTMAN(No es necesario que sea este, y podemos usar alguno online).Incluir un documento con capturas (1 punto)
+
+Realizar todas las operaciones de un modelo, pero usando ViewSets. Podéis usar un modelo repetido, para ver las diferencias entre un caso y otro.(1 punto)
+
+Incluir en la aplicación algún modelo(Puede repetirse con alguno de los anteriores) un campo que sea un archivo, y gestionar las peticiones GET, POST, PUT, PATCH y DELETE de ese campo(1 punto)
+
+
 -----------------------------------------------------Mis cosas----------------------------------------------------------------------
 # comandos :
 
