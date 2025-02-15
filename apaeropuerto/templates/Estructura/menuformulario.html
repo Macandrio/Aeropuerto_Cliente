@@ -3,6 +3,7 @@
         <i class="fa-solid fa-bars"></i> Formulario
     </button>
     <ul class="dropdown-menu dropdown-menu-end">
+        <!-- Aeropuerto -->
         <li>
             <a class="dropdown-item" href="{% url 'Aeropuerto_busqueda_simple' %}"><i class="fas fa-search"></i> Buscar Aeropuerto </a>
         </li>
@@ -12,15 +13,18 @@
         <li>
             <a class="dropdown-item" href="{% url 'Aeropuerto_crear' %}"><i class="fas fa-search"></i> Crear Aeropuerto </a>
         </li>
+        <!-- Aerolinea -->
         <li>
             <a class="dropdown-item" href="{% url 'Aerolinea_busqueda_avanzada' %}"><i class="fas fa-search"></i> Buscar Avanzado Aerolinea </a>
         </li>
         <li>
             <a class="dropdown-item" href="{% url 'Aerolinea_crear' %}"><i class="fas fa-search"></i> Crear Aerolinea </a>
         </li>
+        <!-- Estadisticas -->
         <li>
             <a class="dropdown-item" href="{% url 'Estadisticas_busqueda_avanzada' %}"><i class="fas fa-search"></i> Buscar Avanzado Estadistica </a>
         </li>
+        <!-- Reserva -->
         <li>
             <a class="dropdown-item" href="{% url 'Reserva_busqueda_avanzada' %}"><i class="fas fa-search"></i> Buscar Avanzado Reservas </a>
         </li>

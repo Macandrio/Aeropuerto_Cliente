@@ -200,10 +200,11 @@ class AerolineaForm(forms.Form):
         super(AerolineaForm, self).__init__(*args, **kwargs)
         
         aeropuertosDisponibles = helper.obtener_Aeropuertos()
-        self.fields["aeropuerto"] = forms.ChoiceField(
+        self.fields["aeropuerto"] = forms.MultipleChoiceField(
             choices=aeropuertosDisponibles,
-            widget=forms.Select,
-            #required=True,
+            required=True,
+            help_text="Mantén pulsada la tecla control para seleccionar varios elementos"
+
         )
 
 #---------------------------------------------Estadisticas-----------------------------------------------------------------------

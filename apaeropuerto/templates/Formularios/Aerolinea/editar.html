@@ -1,0 +1,71 @@
+{% extends "Principal.html" %}
+
+{% block contenido %}
+<div class="container mt-5">
+    <div class="card shadow-lg p-4 bg-white rounded">
+        <h1 class="text-center text-primary mb-4">✈️ Modificar Aerolínea</h1>
+
+        <!-- Mostrar mensajes de éxito o error -->
+        {% if messages %}
+            <div class="mt-3">
+                {% for message in messages %}
+                    <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% else %}alert-warning{% endif %} alert-dismissible fade show text-center" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Formulario -->
+        <form method="post" class="needs-validation mt-3">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="{{ formulario.nombre.id_for_label }}" class="form-label fw-bold">🏢 Nombre</label>
+                {{ formulario.nombre }}
+                {% if formulario.nombre.errors %}
+                    <div class="text-danger">{{ formulario.nombre.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ formulario.pais.id_for_label }}" class="form-label fw-bold">🌍 País</label>
+                {{ formulario.pais }}
+                {% if formulario.pais.errors %}
+                    <div class="text-danger">{{ formulario.pais.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ formulario.fecha_fundacion.id_for_label }}" class="form-label fw-bold">📅 Fecha de Fundación</label><br>
+                {{ formulario.fecha_fundacion }}
+                {% if formulario.fecha_fundacion.errors %}
+                    <div class="text-danger">{{ formulario.fecha_fundacion.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ formulario.codigo.id_for_label }}" class="form-label fw-bold">🔢 Código</label><br>
+                {{ formulario.codigo }}
+                {% if formulario.codigo.errors %}
+                    <div class="text-danger">{{ formulario.codigo.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="{{ formulario.aeropuerto.id_for_label }}" class="form-label fw-bold">🏛️ Aeropuertos Asociados</label><br>
+                {{ formulario.aeropuerto }}
+                {% if formulario.aeropuerto.errors %}
+                    <div class="text-danger">{{ formulario.aeropuerto.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="d-flex justify-content-center gap-3">
+                <button type="submit" class="btn btn-success fw-bold px-4">✅ Guardar Cambios</button>
+                <a href="{% url 'aerolinea_listar_api' %}" class="btn btn-secondary fw-bold px-4">❌ Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

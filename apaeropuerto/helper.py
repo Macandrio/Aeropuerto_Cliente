@@ -18,7 +18,7 @@ class helper:
         response = requests.get(BASE_API_URL + version + 'Aeropuerto/' ,headers=headers)
         aeropuertos = response.json()
         
-        lista_aeropuertos = [("","Ninguna")]
+        lista_aeropuertos = []
         for aeropuerto in aeropuertos:
             lista_aeropuertos.append((aeropuerto["id"],aeropuerto["nombre"]))
         return lista_aeropuertos
@@ -29,3 +29,10 @@ class helper:
         response = requests.get(BASE_API_URL + version + 'Aeropuerto/' + str(id) ,headers=headers)
         aeropuerto = response.json()
         return aeropuerto
+    
+    def obtener_Aerolinea(id):
+        
+        headers = {'Authorization': 'Bearer '+env("Admin")} 
+        response = requests.get(BASE_API_URL + version + 'Aerolinea/' + str(id) ,headers=headers)
+        aerolinea = response.json()
+        return aerolinea

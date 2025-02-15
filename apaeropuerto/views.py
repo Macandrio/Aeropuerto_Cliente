@@ -332,6 +332,10 @@ def Aeropuerto_obtener(request,aeropuerto_id):
     aeropuertos = helper.obtener_Aeropuerto(aeropuerto_id)
     return render(request, 'Formularios/Aeropuerto/aeropuerto_mostrar.html',{"aeropuerto":aeropuertos})
 
+def Aerolinea_obtener(request,aerolinea_id):
+    aerolinea = helper.obtener_Aerolinea(aerolinea_id)
+    return render(request, 'Formularios/Aerolinea/aerolinea_mostrar.html',{"aerolinea":aerolinea})
+
 
 #------------------------------------------------Formularios_Editar-----------------------------------------------------------------------------
 
@@ -365,7 +369,6 @@ def aeropuerto_editar(request,aeropuerto_id):
         
 
         #Enviar los Datos a la API REST
-        print("📌 Contenido actual de la sesión:", request.session.items())  # ✅ Ver qué hay en la sesión
         cliente = cliente_api(
                                 env("Admin"),
                                 "PUT",
@@ -391,6 +394,61 @@ def aeropuerto_editar(request,aeropuerto_id):
                 return manejar_errores_api(request,cliente.codigoRespuesta)
     return render(request, 'Formularios/Aeropuerto/editar.html',{"formulario":formulario,"aeropuerto":aeropuerto})
 
+def Aerolinea_editar(request,aerolinea_id):
+   
+    datosFormulario = None
+    
+    # ✅ Si el usuario envió datos (POST), se almacenan en `datosFormulario`
+    if request.method == "POST":
+        datosFormulario = request.POST 
+    
+    # ✅ Obtener los datos actuales del aeropuerto desde la API
+    aerolinea = helper.obtener_Aerolinea(aerolinea_id) 
+
+    #Crear el Formulario con Datos Iniciales
+    formulario = AerolineaForm(datosFormulario,
+            initial={
+                #'campo': modelo[dato]
+                'nombre': aerolinea['nombre'],
+                'codigo': aerolinea["codigo"],
+                'pais': aerolinea['pais'],
+                'fecha_fundacion': aerolinea['fecha_fundacion'],
+                #'campo: [bucle]'
+                'aeropuerto': [aerop for aerop in aerolinea['aeropuerto']],
+            }
+    )
+
+    # ✅ Si el usuario envió un formulario (POST), procesamos los datos
+    if (request.method == "POST"):
+        formulario = AerolineaForm(request.POST)
+        datos = request.POST.copy()
+        datos["aeropuerto"] = request.POST.getlist("aeropuerto") # Para transformarla en lista
+        
+        
+        cliente = cliente_api(
+                                env("Admin"),
+                                "PUT",
+                                'Aerolinea/editar/'+str(aerolinea_id),
+                                datos
+                            )
+        
+        cliente.realizar_peticion_api()
+
+        #Manejar la Respuesta de la API
+        if(cliente.es_respuesta_correcta()):
+            # ✅ Guardar el mensaje directamente como lo envía la API
+            mensaje = cliente.datosRespuesta
+
+            # ✅ Guardar mensaje en Django Messages
+            messages.success(request, mensaje)
+
+            return redirect("mostrar_aerolinea",aerolinea_id=aerolinea_id)
+        else:
+            if(cliente.es_error_validacion_datos()):
+                cliente.incluir_errores_formulario(formulario)
+            else:
+                return manejar_errores_api(request,cliente.codigoRespuesta)
+    return render(request, 'Formularios/Aerolinea/editar.html',{"formulario":formulario,"aerolinea":aerolinea})
 
 #------------------------------------------------Formularios_Actualizar----------------------------------------------------------------------
 
