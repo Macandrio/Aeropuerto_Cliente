@@ -207,6 +207,11 @@ class AerolineaForm(forms.Form):
 
         )
 
+class AerolineaActualizarNombreForm(forms.Form):
+    nombre = forms.CharField(label="Nombre de la Aeroliena",
+                             required=True, 
+                             max_length=200,
+                             help_text="200 caracteres como máximo")
 #---------------------------------------------Estadisticas-----------------------------------------------------------------------
 
 

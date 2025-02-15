@@ -498,7 +498,51 @@ def Aeropuerto_actualizar_nombre(request,aeropuerto_id):
             return mi_error_500(request)
     return render(request, 'Formularios/Aeropuerto/actualizar_nombre.html',{"formulario":formulario,"aeropuerto":aeropuerto})
 
+def Aerolinea_actualizar_nombre(request,aerolinea_id):
+   
+    datosFormulario = None
+    
+    if request.method == "POST":
+        datosFormulario = request.POST
+    
+    aerolinea = helper.obtener_Aerolinea(aerolinea_id)
+    formulario = AerolineaActualizarNombreForm(datosFormulario,
+            initial={
+                'nombre': aerolinea['nombre'],
+            }
+    )
+    if (request.method == "POST"):
+        try:
+            formulario = AerolineaActualizarNombreForm(request.POST)
+            headers = crear_cabecera()
+            datos = request.POST.copy()
+            response = requests.patch(
+                BASE_API_URL + version + 'Aerolinea/actualizar/nombre/'+str(aerolinea_id),
+                headers=headers,
+                data=json.dumps(datos)
+            )
+            if(response.status_code == requests.codes.ok):
+                return redirect("mostrar_aerolinea",aerolinea_id=aerolinea_id)
+            else:
+                print(response.status_code)
+                response.raise_for_status()
 
+        except HTTPError as http_err:
+            print(f'Hubo un error en la petición: {http_err}')
+
+            if(response.status_code == 400):
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error,errores[error])
+                return render(request, 
+                            'Formularios/Aerolinea/actualizar_nombre.html',
+                            {"formulario":formulario,"aerolinea":aerolinea})
+            else:
+                return mi_error_500(request)
+        except Exception as err:
+            print(f'Ocurrió un error: {err}')
+            return mi_error_500(request)
+    return render(request, 'Formularios/Aerolinea/actualizar_nombre.html',{"formulario":formulario,"aerolinea":aerolinea})
 #------------------------------------------------Formularios_Eliminar----------------------------------------------------------------------
 
 
@@ -521,6 +565,26 @@ def Aeropuerto_eliminar(request,aeropuerto_id):
         print(f'Ocurrió un error: {err}')
         return mi_error_500(request)
     return redirect('aeropuerto_listar_api')
+
+def Aerolinea_eliminar(request,aerolinea_id):
+    try:
+        headers = crear_cabecera()
+        response = requests.delete(
+           BASE_API_URL + version + 'Aerolinea/eliminar/'+str(aerolinea_id),
+            headers=headers,
+        )
+
+        if(response.status_code == requests.codes.ok):
+            mensaje = response.text.strip()  # ✅ Extraer el mensaje de la API sin validaciones
+            messages.success(request, mensaje)
+            return redirect("aerolinea_listar_api")
+        else:
+            print(response.status_code)
+            response.raise_for_status()
+    except Exception as err:
+        print(f'Ocurrió un error: {err}')
+        return mi_error_500(request)
+    return redirect('aerolinea_listar_api')
 
 #------------------------------------------------Páginas de Error-----------------------------------------------------------------------------
 

@@ -93,12 +93,18 @@
                         </div>
                     </div>
                     <div class="mb-2">
-                        <form  method = "post"> 
+                        <form  action = "{% url 'Aerolinea_eliminar' Aerolinea.id %}" method = "post"> 
                             {% csrf_token %}
                             <button class="btn btn-danger" type="submit">
                                 <span>{% bs_icon 'trash' %}</span>
                             </button> 
                         </form>
+                         <!-- Botón Actualizar Nombre -->
+                         <button type="button" class="btn btn-outline-warning"> 
+                            <a href="{% url 'Aerolinea_actualizar_nombre' Aerolinea.id %}">
+                                <span>{% bs_icon 'pencil-square' %}</span> Actualizar Nombre
+                            </a>
+                        </button>
                     </div>
                 </div>
             </div>
