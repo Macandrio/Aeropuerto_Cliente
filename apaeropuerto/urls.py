@@ -9,6 +9,10 @@ urlpatterns = [
     path('Reserva/', views.reserva_listar_api, name='reserva_listar_api'),
     path('VueloAerolinea/', views.vueloaerolinea_listar_api, name='vueloaerolinea_listar_api'),
 
+    #Mostrar 1
+    path('Aeropeurto/<int:aeropuerto_id>',views.Aeropuerto_obtener, name='mostrar_aeropuerto'),
+
+
     #Buscar
     path('Aeropuerto/busqueda_simple/', views.Aeropuerto_busqueda_simple, name='Aeropuerto_busqueda_simple'),
     path('Aeropuerto/busqueda_avanzada/', views.Aeropuerto_busqueda_avanzada, name='Aeropuerto_busqueda_avanzada'),
@@ -19,4 +23,8 @@ urlpatterns = [
 
     #Crear
     path('Aeropuerto/Crear/', views.Aeropuerto_crear, name='Aeropuerto_crear'),
+
+
+    #Editar
+    path('aeropuerto/editar/<int:aeropuerto_id>/', views.aeropuerto_editar, name="aeropuerto_editar"),
 ]

@@ -12,13 +12,9 @@ version = env("version")
 
 class helper:
     
-    def obtener_Aeropuerto_select():
+    def obtener_Aeropuerto(id):
         # obtenemos todos los Aeropuertos
         headers = {'Authorization': 'Bearer '+env("Admin")} 
-        response = requests.get(BASE_API_URL + version + 'Aeropuerto',headers=headers)
-        aeropuertos = response.json()
-        
-        lista_aeropuerto = [("","Ninguna")]
-        for aeropuerto in aeropuertos:
-            lista_aeropuerto.append((aeropuerto["id"],aeropuerto["nombre"]))
-        return lista_aeropuerto
+        response = requests.get(BASE_API_URL + version + 'Aeropuerto/' + str(id) ,headers=headers)
+        aeropuerto = response.json()
+        return aeropuerto

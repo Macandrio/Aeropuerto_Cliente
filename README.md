@@ -573,7 +573,7 @@ Empleado.objects.select_related(
 
 http://0.0.0.0:8000/oauth2/applications/
 
-curl -X POST "http://0.0.0.0:8000/oauth2/token/" -d "grant_type=password&username=admin&password=admin&client_id=mi_aplicacion&client_secret=mi_clave_secreta"
+curl -X POST "http://0.0.0.0:8000/oauth2/token/" -d "grant_type=password&username=ale&password=ale&client_id=mi_aplicacion&client_secret=mi_clave_secreta"
 
 
 Funciona

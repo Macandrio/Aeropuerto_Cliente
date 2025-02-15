@@ -9,6 +9,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 from .utils import *  # Importar las funciones
 from .helper import *
+from .cliente_api import *
 
 
 
@@ -251,7 +252,7 @@ def Reserva_busqueda_avanzada(request):
 
     return render(request, 'Formularios/Reservas/busqueda_avanzada.html', {"formulario": formulario})
 
-#------------------------------------------------Formularios Crear-----------------------------------------------------------------------------
+#------------------------------------------------Formularios_Crear-----------------------------------------------------------------------------
 
 def Aeropuerto_crear(request):
     
@@ -275,7 +276,7 @@ def Aeropuerto_crear(request):
             )
 
             if response.status_code == requests.codes.ok:
-                #messages.success(request, response.json())  # ✅ Mostrar mensaje en la plantilla
+                messages.success(request, response.json())  # ✅ Mostrar mensaje en la plantilla
                 return redirect("aeropuerto_listar_api")
             else:
                 return manejar_errores_api(response, request, formulario, "Formularios/Aeropuerto/create.html")
@@ -286,6 +287,71 @@ def Aeropuerto_crear(request):
          formulario = AeropuertoFrom(None)
     return render(request, 'Formularios/Aeropuerto/create.html',{"formulario":formulario})
 
+
+#------------------------------------------------Formularios_Obtener-----------------------------------------------------------------------------
+
+def Aeropuerto_obtener(request,aeropuerto_id):
+    aeropuertos = helper.obtener_Aeropuerto(aeropuerto_id)
+    return render(request, 'Formularios/Aeropuerto/aeropuerto_mostrar.html',{"aeropuerto":aeropuertos})
+
+
+#------------------------------------------------Formularios_Editar-----------------------------------------------------------------------------
+
+
+def aeropuerto_editar(request,aeropuerto_id):
+   
+    datosFormulario = None
+    
+    # ✅ Si el usuario envió datos (POST), se almacenan en `datosFormulario`
+    if request.method == "POST":
+        datosFormulario = request.POST 
+    
+    # ✅ Obtener los datos actuales del aeropuerto desde la API
+    aeropuerto = helper.obtener_Aeropuerto(aeropuerto_id) 
+
+    #Crear el Formulario con Datos Iniciales
+    formulario = AeropuertoFrom(datosFormulario,
+            initial={
+                'nombre': aeropuerto['nombre'],
+                'ciudades': aeropuerto["ciudades"],
+                'pais': aeropuerto['pais'],
+                'capacidad_maxima': aeropuerto['capacidad_maxima'],
+            }
+    )
+
+    # ✅ Si el usuario envió un formulario (POST), procesamos los datos
+    if (request.method == "POST"):
+        formulario = AeropuertoFrom(request.POST)
+        datos = request.POST.copy()
+        
+        
+
+        #Enviar los Datos a la API REST
+        print("📌 Contenido actual de la sesión:", request.session.items())  # ✅ Ver qué hay en la sesión
+        cliente = cliente_api(
+                                env("Admin"),
+                                "PUT",
+                                'Aeropuerto/editar/'+str(aeropuerto_id),
+                                datos
+                            )
+        
+        cliente.realizar_peticion_api()
+
+        #Manejar la Respuesta de la API
+        if(cliente.es_respuesta_correcta()):
+            # ✅ Guardar el mensaje directamente como lo envía la API
+            mensaje = cliente.datosRespuesta
+
+            # ✅ Guardar mensaje en Django Messages
+            messages.success(request, mensaje)
+
+            return redirect("mostrar_aeropuerto",aeropuerto_id=aeropuerto_id)
+        else:
+            if(cliente.es_error_validacion_datos()):
+                cliente.incluir_errores_formulario(formulario)
+            else:
+                return manejar_errores_api(request,cliente.codigoRespuesta)
+    return render(request, 'Formularios/Aeropuerto/editar.html',{"formulario":formulario,"aeropuerto":aeropuerto})
 
 #------------------------------------------------Páginas de Error-----------------------------------------------------------------------------
 
