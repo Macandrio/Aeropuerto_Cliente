@@ -377,6 +377,11 @@ def Aerolinea_obtener(request,aerolinea_id):
     aerolinea = helper.obtener_Aerolinea(aerolinea_id)
     return render(request, 'Formularios/Aerolinea/aerolinea_mostrar.html',{"aerolinea":aerolinea})
 
+def Reserva_obtener(request,reserva_id):
+    reserva = helper.obtener_Reserva(reserva_id)
+    print(" Datos recibidos:", reserva)
+    return render(request, 'Formularios/Reservas/reserva_mostrar.html',{"reserva":reserva})
+
 
 #------------------------------------------------Formularios_Editar-----------------------------------------------------------------------------
 
@@ -491,6 +496,61 @@ def Aerolinea_editar(request,aerolinea_id):
                 return manejar_errores_api(request,cliente.codigoRespuesta)
     return render(request, 'Formularios/Aerolinea/editar.html',{"formulario":formulario,"aerolinea":aerolinea})
 
+def Reserva_editar(request,reserva_id):
+   
+    datosFormulario = None
+    
+    # ✅ Si el usuario envió datos (POST), se almacenan en `datosFormulario`
+    if request.method == "POST":
+        datosFormulario = request.POST 
+    
+    # ✅ Obtener los datos actuales del aeropuerto desde la API
+    reserva = helper.obtener_Reserva(reserva_id) 
+
+    #Crear el Formulario con Datos Iniciales
+    formulario = ReservaForm(datosFormulario,
+            initial={
+                #'campo': modelo[dato]
+                'fecha_reserva': reserva['fecha_reserva'],
+                'codigo_descueto': reserva["codigo_descueto"],
+                'metodo_pago': reserva['metodo_pago'],
+                'estado_de_pago': reserva['estado_de_pago'],
+                'pasajero': reserva['pasajero'],
+                'vuelo': reserva['vuelo'],
+            }
+    )
+
+    # ✅ Si el usuario envió un formulario (POST), procesamos los datos
+    if (request.method == "POST"):
+        formulario = ReservaForm(request.POST)
+        datos = request.POST.copy()
+        
+        
+        cliente = cliente_api(
+                                env("Admin"),
+                                "PUT",
+                                'Reserva/editar/'+str(reserva_id),
+                                datos
+                            )
+        
+        cliente.realizar_peticion_api()
+
+        #Manejar la Respuesta de la API
+        if(cliente.es_respuesta_correcta()):
+            # ✅ Guardar el mensaje directamente como lo envía la API
+            mensaje = cliente.datosRespuesta
+
+            # ✅ Guardar mensaje en Django Messages
+            messages.success(request, mensaje)
+
+            return redirect("mostrar_reserva",reserva_id=reserva_id)
+        else:
+            if(cliente.es_error_validacion_datos()):
+                cliente.incluir_errores_formulario(formulario)
+            else:
+                return manejar_errores_api(request,cliente.codigoRespuesta)
+    return render(request, 'Formularios/Reservas/editar.html',{"formulario":formulario,"reserva":reserva})
+
 #------------------------------------------------Formularios_Actualizar----------------------------------------------------------------------
 
 def Aeropuerto_actualizar_nombre(request,aeropuerto_id):
@@ -584,6 +644,7 @@ def Aerolinea_actualizar_nombre(request,aerolinea_id):
             print(f'Ocurrió un error: {err}')
             return mi_error_500(request)
     return render(request, 'Formularios/Aerolinea/actualizar_nombre.html',{"formulario":formulario,"aerolinea":aerolinea})
+
 #------------------------------------------------Formularios_Eliminar----------------------------------------------------------------------
 
 

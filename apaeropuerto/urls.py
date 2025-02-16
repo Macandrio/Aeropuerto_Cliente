@@ -12,6 +12,7 @@ urlpatterns = [
     #Mostrar por id
     path('Aeropeurto/<int:aeropuerto_id>',views.Aeropuerto_obtener, name='mostrar_aeropuerto'),
     path('Aerolinea/<int:aerolinea_id>',views.Aerolinea_obtener, name='mostrar_aerolinea'),
+    path('Reserva/<int:reserva_id>',views.Reserva_obtener, name='mostrar_reserva'),
 
 
     #Buscar
@@ -32,6 +33,8 @@ urlpatterns = [
     #Editar
     path('aeropuerto/editar/<int:aeropuerto_id>/', views.aeropuerto_editar, name="aeropuerto_editar"),
     path('Aerolinea/editar/<int:aerolinea_id>/', views.Aerolinea_editar, name="Aerolinea_editar"),
+    path('Reserva/editar/<int:reserva_id>/', views.Reserva_editar, name="Reserva_editar"),
+    
 
     #Actualizar
     path('aeropuerto/actualizar/nombre/<int:aeropuerto_id>',views.Aeropuerto_actualizar_nombre,name='Aeropuerto_actualizar_nombre'),

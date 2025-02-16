@@ -285,7 +285,7 @@ class ReservaForm(forms.Form):
     ]
     
     metodo_pago = forms.ChoiceField(choices=METODO_PAGO_CHOICES,
-                             required=False, 
+                             required=True, 
                                initial="")
     
     codigo_descueto = forms.CharField(label="codigo de descuento",
@@ -298,7 +298,7 @@ class ReservaForm(forms.Form):
                                         widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
                                         )
     
-    estado_de_pago = forms.BooleanField(initial=False)
+    estado_de_pago = forms.BooleanField(initial=False, required=False)
 
 
     def __init__(self, *args, **kwargs):
@@ -313,11 +313,11 @@ class ReservaForm(forms.Form):
 
         )
 
-        # vueloDisponibles = helper.obtener_Vuelos()
-        # self.fields["vuelo"] = forms.ChoiceField(
-        #     choices=vueloDisponibles,
-        #     required=True,
-        #     help_text="Selecciona un Vuelo"
+        vueloDisponibles = helper.obtener_Vuelos()
+        self.fields["vuelo"] = forms.ChoiceField(
+            choices=vueloDisponibles,
+            required=True,
+            help_text="Selecciona un Vuelo"
 
-        # )
+        )
 

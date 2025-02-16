@@ -65,7 +65,14 @@ class helper:
         response = requests.get(BASE_API_URL + version + 'Vuelos/' ,headers=headers)
         vuelos = response.json()
         
-        lista_vuelos = []
+        lista_vuelos = [("","Ninguna")]
         for vuelo in vuelos:
             lista_vuelos.append((vuelo["id"],vuelo["id"]))
         return lista_vuelos
+    
+    def obtener_Reserva(id):
+        # obtenemos el Reserva
+        headers = {'Authorization': 'Bearer '+env("Admin")} 
+        response = requests.get(BASE_API_URL + version + 'Reserva/' + str(id) ,headers=headers)
+        reserva = response.json()
+        return reserva
