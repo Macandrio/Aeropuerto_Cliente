@@ -274,3 +274,50 @@ class BusquedaAvanzadaReserva(forms.Form):
     )
 
     estado_de_pago = forms.BooleanField(required=False,)
+
+class ReservaForm(forms.Form):
+    
+    METODO_PAGO_CHOICES = [
+        ("", "Ninguno"),
+        ('tarjeta', 'Tarjeta de crédito'),
+        ('efectivo', 'Efectivo'),
+        ('paypal', 'PayPal'),
+    ]
+    
+    metodo_pago = forms.ChoiceField(choices=METODO_PAGO_CHOICES,
+                             required=False, 
+                               initial="")
+    
+    codigo_descueto = forms.CharField(label="codigo de descuento",
+                            required=False, 
+                            max_length=10,
+                            help_text="10 caracteres como máximo")
+    
+    fecha_reserva = forms.DateTimeField(label="Fecha de la reserva",
+                                        initial=datetime.datetime.today,
+                                        widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+                                        )
+    
+    estado_de_pago = forms.BooleanField(initial=False)
+
+
+    def __init__(self, *args, **kwargs):
+        
+        super(ReservaForm, self).__init__(*args, **kwargs)
+        
+        pasajeroDisponibles = helper.obtener_Pasajero_select()
+        self.fields["pasajero"] = forms.ChoiceField(
+            choices=pasajeroDisponibles,
+            required=True,
+            help_text="Mantén pulsada la tecla control para seleccionar varios elementos"
+
+        )
+
+        # vueloDisponibles = helper.obtener_Vuelos()
+        # self.fields["vuelo"] = forms.ChoiceField(
+        #     choices=vueloDisponibles,
+        #     required=True,
+        #     help_text="Selecciona un Vuelo"
+
+        # )
+

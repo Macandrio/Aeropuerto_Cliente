@@ -36,3 +36,36 @@ class helper:
         response = requests.get(BASE_API_URL + version + 'Aerolinea/' + str(id) ,headers=headers)
         aerolinea = response.json()
         return aerolinea
+
+    def obtener_Pasajero_select():
+        # obtenemos todos los Pasajeros
+        headers = {'Authorization': 'Bearer '+env("Admin")} 
+        response = requests.get(BASE_API_URL + version + 'Pasajeros/' ,headers=headers)
+        pasajeros = response.json()
+        
+        lista_pasajeros = [("","Ninguna")]
+        for pasajero in pasajeros:
+
+            # Aquí tienes el ID del usuario
+            usuario_id = pasajero["usuario"]
+            response_usuario = requests.get(BASE_API_URL + version + 'Usuario/' + str(usuario_id) ,headers=headers)
+            
+            if response_usuario.status_code == 200:
+                usuario_data = response_usuario.json()
+                nombre_usuario = usuario_data.get("username", "Desconocido")  # Obtenemos el nombre de usuario
+            else:
+                nombre_usuario = "Desconocido"
+
+            lista_pasajeros.append((pasajero["id"], nombre_usuario))
+        return lista_pasajeros
+    
+    def obtener_Vuelos():
+        # obtenemos todos los Aeropuertos
+        headers = {'Authorization': 'Bearer '+env("Admin")} 
+        response = requests.get(BASE_API_URL + version + 'Vuelos/' ,headers=headers)
+        vuelos = response.json()
+        
+        lista_vuelos = []
+        for vuelo in vuelos:
+            lista_vuelos.append((vuelo["id"],vuelo["id"]))
+        return lista_vuelos

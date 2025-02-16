@@ -326,6 +326,47 @@ def Aerolinea_crear(request):
          formulario = AerolineaForm(None)
     return render(request, 'Formularios/Aerolinea/create.html',{"formulario":formulario})
 
+def Reserva_crear(request):
+    
+    if (request.method == "POST"):
+        try:
+            formulario = ReservaForm(request.POST)
+
+            headers =  crear_cabecera()
+
+            datos = formulario.data.copy()
+            if all(k in datos for k in ['fecha_reserva_year', 'fecha_reserva_month', 'fecha_reserva_day']):
+                datos["fecha_reserva"] = str(
+                                                datetime.date(year=int(datos['fecha_reserva_year']),
+                                                            month=int(datos['fecha_reserva_month']),
+                                                            day=int(datos['fecha_reserva_day'])),
+                                                            hour=0,  # Puedes cambiar la hora según necesidad
+                                                            minute=0,
+                                                            second=0
+                                                )
+            else:
+                print('faltand atos')
+            
+
+            
+            response = requests.post(
+                BASE_API_URL + version +'Reserva/Crear',
+                headers=headers,
+                data=json.dumps(datos)
+            )
+
+            if response.status_code == requests.codes.ok:
+                messages.success(request, response.json())  # ✅ Mostrar mensaje en la plantilla
+                return redirect("reserva_listar_api")
+            else:
+                return manejar_errores_api(response, request, formulario, "Formularios/Reservas/create.html")
+
+        except Exception as err:
+            return manejar_excepciones_api(err, request)  
+    else:
+         formulario = ReservaForm(None)
+    return render(request, 'Formularios/Reservas/create.html',{"formulario":formulario})
+
 #------------------------------------------------Formularios_Obtener-----------------------------------------------------------------------------
 
 def Aeropuerto_obtener(request,aeropuerto_id):

@@ -425,7 +425,7 @@ Esta el usuario gerente que debe poder hace las estadisticas de vuelo.
 
 Realizar las operaciones de POST, PUT, PATCH y DELETE de un modelo con relaciones ManyToOne con sus validaciones(al menos 3 campos), control de errores y respuestas.(1 punto ,0,25:POST, 0,25: PUT, 0,25:PATCH, 0,25-DELETE)
 
-Realizar las operaciones de POST, PUT, PATCH y DELETE de un modelo con una relacion ManyToMany distinto al anterior,con sus validaciones(al menos 3 campos), control de errores y respuestas.(1 punto ,0,25:POST, 0,25: PUT, 0,25:PATCH, 0,25-DELETE)
+* Realizar las operaciones de POST, PUT, PATCH y DELETE de un modelo con una relacion ManyToMany distinto al anterior,con sus validaciones(al menos 3 campos), control de errores y respuestas.(1 punto ,0,25:POST, 0,25: PUT, 0,25:PATCH, 0,25-DELETE)
 
 Realizar las operaciones de POST, PUT, PATCH y DELETE de un modelo con relaciones ManyToMany con tabla intermedia distinto al anterior, con sus validaciones(al menos 3 campos), control de errores y respuestas.(1 punto ,0,25:POST, 0,25: PUT, 0,25:PATCH, 0,25-DELETE)
 
@@ -555,11 +555,10 @@ EstadisticasVuelo.objects.select_related(
 
 # Pasajero
 Pasajero.objects.prefetch_related(
-    Prefetch('vuelo_pasajero'),           # ManyToMany con Vuelo
+    Prefetch('vuelo'),                    # ManyToMany con Vuelo
     Prefetch('equipaje_pasajero'),        # ManyToOne con Equipaje
     Prefetch('reserva_pasajero'),         # ManyToOne con Reserva
     Prefetch('pajarelo_asiento'),         # ManyToOne con Asiento
-    Prefetch('pasajero_datos')            # OneToOne con PerfilPasajero
 )
 
 # PerfilPasajero
