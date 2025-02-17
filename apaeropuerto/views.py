@@ -220,7 +220,6 @@ def Estadisticas_busqueda_avanzada(request):
 
     return render(request, 'Formularios/Estadisticas_vuelo/busqueda_avanzada.html', {"formulario": formulario})
 
-
 def Reserva_busqueda_avanzada(request):
     if len(request.GET) > 0:
         formulario = BusquedaAvanzadaReserva(request.GET)
@@ -243,6 +242,36 @@ def Reserva_busqueda_avanzada(request):
                     return render(request, 'Formularios/Reservas/busqueda_avanzada.html', {"reservas": reservas,"formulario": formulario})
                 else:
                     return manejar_errores_api(response, request, formulario, "Formularios/Reservas/busqueda_avanzada.html")
+
+            except Exception as err:
+                return manejar_excepciones_api(err, request)
+    else:
+        formulario = BusquedaAvanzadaReserva(None)
+
+    return render(request, 'Formularios/Reservas/busqueda_avanzada.html', {"formulario": formulario})
+
+def Vuelo_Aerolinea_busqueda_avanzada(request):
+    if len(request.GET) > 0:
+        formulario = BusquedaAvanzadaVueloAerolineaForm(request.GET)
+
+        if formulario.is_valid():
+            try:
+                headers = crear_cabecera()
+                response = requests.get(
+                    BASE_API_URL + version + 'VueloAerolinea/busqueda_avanzada',
+                    headers=headers,
+                    params=formulario.cleaned_data
+                )
+
+                #  Detectar formato de respuesta (JSON o XML)
+                vueloaerolinea = transformar_respuestas(response)
+
+                print(" Datos recibidos:", vueloaerolinea)
+
+                if response.status_code == requests.codes.ok:
+                    return render(request, 'Formularios/VueloAerolinea/busqueda_avanzada.html', {"vueloaerolinea": vueloaerolinea,"formulario": formulario})
+                else:
+                    return manejar_errores_api(response, request, formulario, "Formularios/VueloAerolinea/busqueda_avanzada.html")
 
             except Exception as err:
                 return manejar_excepciones_api(err, request)
@@ -733,6 +762,26 @@ def Aerolinea_eliminar(request,aerolinea_id):
         print(f'Ocurrió un error: {err}')
         return mi_error_500(request)
     return redirect('aerolinea_listar_api')
+
+def Reserva_eliminar(request,reserva_id):
+    try:
+        headers = crear_cabecera()
+        response = requests.delete(
+           BASE_API_URL + version + 'Reserva/eliminar/'+str(reserva_id),
+            headers=headers,
+        )
+
+        if(response.status_code == requests.codes.ok):
+            mensaje = response.text.strip()  # ✅ Extraer el mensaje de la API sin validaciones
+            messages.success(request, mensaje)
+            return redirect("reserva_listar_api")
+        else:
+            print(response.status_code)
+            response.raise_for_status()
+    except Exception as err:
+        print(f'Ocurrió un error: {err}')
+        return mi_error_500(request)
+    return redirect('reserva_listar_api')
 
 #------------------------------------------------Páginas de Error-----------------------------------------------------------------------------
 

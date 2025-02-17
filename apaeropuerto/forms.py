@@ -6,8 +6,7 @@ from .helper import helper
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-#---------------------------------------------------------------------------------------------------------------------------------   
-#Buscar Aeropuerto
+#--------------------------------------Aerouerto-------------------------------------------------------------------------------------------   
 
 class BusquedaAeropuertoForm(forms.Form):
     textoBusqueda = forms.CharField(required=True,widget=forms.TextInput(attrs={
@@ -212,8 +211,8 @@ class AerolineaActualizarNombreForm(forms.Form):
                              required=True, 
                              max_length=200,
                              help_text="200 caracteres como máximo")
+    
 #---------------------------------------------Estadisticas-----------------------------------------------------------------------
-
 
 class BusquedaAvanzadaEstadisticas(forms.Form):
     
@@ -262,7 +261,7 @@ class BusquedaAvanzadaReserva(forms.Form):
         ('paypal', 'PayPal'),
     ]
 
-    metodo_pago = forms.ChoiceField(choices=METODO_PAGO_CHOICES,required=False)
+    metodo_pago = forms.ChoiceField(choices=METODO_PAGO_CHOICES,required=True)
     
     fecha_reserva = forms.DateField(
         required=False,
@@ -326,3 +325,36 @@ class ReservaActualizarcodigoForm(forms.Form):
                              required=True, 
                              max_length=200,
                              help_text="100 caracteres como máximo")
+    
+#---------------------------------------------VueloAerolinea-----------------------------------------------------------------------
+
+
+class BusquedaAvanzadaVueloAerolineaForm(forms.Form):
+
+    tipos_clase_avion = [
+    ("", "Ninguno"),
+    ("E", "Economy"),
+    ("B", "Business"),
+    ("F", "First Class"),
+    ("P", "Premium Economy"),
+    ("L", "Luxury"),
+    ("S", "Standard"),
+    ("H", "Hybrid"),
+    ("X", "Extra Legroom"),
+    ("R", "Regional"),
+    ("C", "Charter")
+    ]
+
+    clase = forms.ChoiceField(choices=tipos_clase_avion,required=False)
+
+    fecha_operacion = forms.DateTimeField(
+        required=False,
+        widget=forms.DateInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Fecha y Hora',
+            'type' : 'datetime-local'
+        })
+    )
+
+    estado = forms.CharField()
+    incidencias = forms.CharField()
