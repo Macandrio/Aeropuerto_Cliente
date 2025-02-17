@@ -184,7 +184,7 @@ class AerolineaForm(forms.Form):
     
     pais = forms.ChoiceField(choices=paises,
                              required=False, 
-                               initial="")
+                             initial="")
     
     codigo = forms.CharField(label="codigo de la Aerolinea",
                             required=False, 
@@ -347,14 +347,74 @@ class BusquedaAvanzadaVueloAerolineaForm(forms.Form):
 
     clase = forms.ChoiceField(choices=tipos_clase_avion,required=False)
 
-    fecha_operacion = forms.DateTimeField(
+    fecha_operacion = forms.DateField(
         required=False,
-        widget=forms.DateInput(attrs={
+        widget=forms.DateTimeInput(attrs={
             'class': 'form-control',
             'placeholder': 'Fecha y Hora',
-            'type' : 'datetime-local'
+            'type' : 'date'
         })
     )
 
     estado = forms.CharField()
     incidencias = forms.CharField()
+
+class VueloAerolineaForm(forms.Form):
+    
+    tipos_clase_avion = [
+    ("", "Ninguno"),
+    ("E", "Economy"),
+    ("B", "Business"),
+    ("F", "First Class"),
+    ("P", "Premium Economy"),
+    ("L", "Luxury"),
+    ("S", "Standard"),
+    ("H", "Hybrid"),
+    ("X", "Extra Legroom"),
+    ("R", "Regional"),
+    ("C", "Charter")
+    ]
+    
+    clase = forms.ChoiceField(choices=tipos_clase_avion,
+                             required=True, 
+                               initial="")
+    
+    estado = forms.CharField(label="Estado del avion",
+                            required=False, 
+                            max_length=100,
+                            help_text="100 caracteres como máximo")
+    
+    
+    fecha_operacion = forms.DateTimeField(label="Fecha de la operacion",
+                                        initial=datetime.datetime.today,
+                                        widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+                                        )
+    
+    incidencias = forms.CharField(label="Incidencias del Aeropuerto",
+                            required=False, 
+                            max_length=100,
+                            help_text="100 caracteres como máximo")
+
+
+    def __init__(self, *args, **kwargs):
+        
+        super(VueloAerolineaForm, self).__init__(*args, **kwargs)
+        
+        vuelosDisponibles = helper.obtener_Vuelos()
+        self.fields["vuelo"] = forms.MultipleChoiceField(
+            choices=vuelosDisponibles,
+            required=True,
+            help_text="Mantén pulsada la tecla control para seleccionar varios elementos"
+
+        )
+
+        aerolineasDisponibles = helper.obtener_Aerolineas()
+        self.fields["aerolinea"] = forms.MultipleChoiceField(
+            choices=aerolineasDisponibles,
+            required=True,
+            help_text="Mantén pulsada la tecla control para seleccionar varios elementos"
+
+        )
+
+        
+

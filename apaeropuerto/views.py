@@ -276,9 +276,9 @@ def Vuelo_Aerolinea_busqueda_avanzada(request):
             except Exception as err:
                 return manejar_excepciones_api(err, request)
     else:
-        formulario = BusquedaAvanzadaReserva(None)
+        formulario = BusquedaAvanzadaVueloAerolineaForm(None)
 
-    return render(request, 'Formularios/Reservas/busqueda_avanzada.html', {"formulario": formulario})
+    return render(request, 'Formularios/VueloAerolinea/busqueda_avanzada.html', {"formulario": formulario})
 
 #------------------------------------------------Formularios_Crear-----------------------------------------------------------------------------
 
@@ -395,6 +395,51 @@ def Reserva_crear(request):
     else:
          formulario = ReservaForm(None)
     return render(request, 'Formularios/Reservas/create.html',{"formulario":formulario})
+
+def VueloAerolinea_crear(request):
+    
+    if (request.method == "POST"):
+        try:
+            formulario = VueloAerolineaForm(request.POST)
+
+            headers =  crear_cabecera()
+
+            datos = formulario.data.copy()
+
+            datos["vuelo"] = request.POST.getlist("vuelo")
+            datos["aeroliena"] = request.POST.getlist("aeroliena")
+            #se asegura de que todas las claves 'fecha_reserva_year', 'fecha_reserva_month' y 'fecha_reserva_day' estén presentes en el diccionario
+            if all(k in datos for k in ['fecha_operacion_year', 'fecha_operacion_month', 'fecha_operacion_day']):
+                datos["fecha_operacion"] = str(
+                                                datetime.datetime(year=int(datos['fecha_operacion_year']),
+                                                            month=int(datos['fecha_operacion_month']),
+                                                            day=int(datos['fecha_operacion_day'])),
+                                                            hour=0,  # Puedes cambiar la hora según necesidad
+                                                            minute=0,
+                                                            second=0
+                                                )
+            else:
+                print('faltand atos')
+            
+
+            
+            response = requests.post(
+                BASE_API_URL + version +'VueloAerolinea/Crear',
+                headers=headers,
+                data=json.dumps(datos)
+            )
+
+            if response.status_code == requests.codes.ok:
+                messages.success(request, response.json())  # ✅ Mostrar mensaje en la plantilla
+                return redirect("vueloaerolinea_listar_api")
+            else:
+                return manejar_errores_api(response, request, formulario, "Formularios/vueloaerolinea/create.html")
+
+        except Exception as err:
+            return manejar_excepciones_api(err, request)  
+    else:
+         formulario = VueloAerolineaForm(None)
+    return render(request, 'Formularios/VueloAerolinea/create.html',{"formulario":formulario})
 
 #------------------------------------------------Formularios_Obtener-----------------------------------------------------------------------------
 
@@ -540,7 +585,7 @@ def Reserva_editar(request,reserva_id):
     formulario = ReservaForm(datosFormulario,
             initial={
                 #'campo': modelo[dato]
-                'fecha_reserva': reserva['fecha_reserva'],
+                'fecha_reserva': datetime.datetime.strptime(reserva['fecha_reserva'], "%Y-%m-%dT%H:%M:%S").date(),
                 'codigo_descueto': reserva["codigo_descueto"],
                 'metodo_pago': reserva['metodo_pago'],
                 'estado_de_pago': reserva['estado_de_pago'],

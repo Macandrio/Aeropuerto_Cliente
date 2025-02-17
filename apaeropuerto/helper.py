@@ -76,3 +76,14 @@ class helper:
         response = requests.get(BASE_API_URL + version + 'Reserva/' + str(id) ,headers=headers)
         reserva = response.json()
         return reserva
+    
+    def obtener_Aerolineas():
+        # obtenemos todos los Aerolineas
+        headers = {'Authorization': 'Bearer '+env("Admin")} 
+        response = requests.get(BASE_API_URL + version + 'Aerolineas/' ,headers=headers)
+        aerolineas = response.json()
+        
+        lista_Aerolineas = [("","Ninguna")]
+        for aerolinea in aerolineas:
+            lista_Aerolineas.append((aerolinea["id"],aerolinea["id"]))
+        return lista_Aerolineas

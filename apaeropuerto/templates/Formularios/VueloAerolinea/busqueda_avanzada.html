@@ -48,6 +48,17 @@
             {% endfor %}
         </div>
 
+        <!-- incidencia -->
+        <div class="mb-3">
+            <label for="{{ formulario.incidencias.id_for_label }}" class="form-label fw-bold">
+                ✅ Estado del avion
+            </label>
+            {{ formulario.incidencias }}
+            {% for error in formulario.incidencias.errors %}
+                <div class="text-danger"><small>{{ error }}</small></div>
+            {% endfor %}
+        </div>
+
         <!-- Botón de Búsqueda -->
         <button type="submit" class="btn btn-primary w-100 fw-bold">
             🔎 Buscar Aerolíneas
