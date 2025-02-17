@@ -39,7 +39,7 @@ urlpatterns = [
     #Actualizar
     path('aeropuerto/actualizar/nombre/<int:aeropuerto_id>',views.Aeropuerto_actualizar_nombre,name='Aeropuerto_actualizar_nombre'),
     path('Aerolinea/actualizar/nombre/<int:aerolinea_id>',views.Aerolinea_actualizar_nombre,name='Aerolinea_actualizar_nombre'),
-
+    path('Reserva/actualizar/codigo/<int:reserva_id>',views.Reserva_actualizar_codigo_descuento,name='Reserva_actualizar_codigo_descuento'),
 
     #Borrar
     path('Aeropuerto/eliminar/<int:aeropuerto_id>',views.Aeropuerto_eliminar, name='Aeropuerto_eliminar'),

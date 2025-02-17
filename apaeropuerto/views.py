@@ -645,6 +645,52 @@ def Aerolinea_actualizar_nombre(request,aerolinea_id):
             return mi_error_500(request)
     return render(request, 'Formularios/Aerolinea/actualizar_nombre.html',{"formulario":formulario,"aerolinea":aerolinea})
 
+def Reserva_actualizar_codigo_descuento(request,reserva_id):
+   
+    datosFormulario = None
+    
+    if request.method == "POST":
+        datosFormulario = request.POST
+    
+    reserva = helper.obtener_Reserva(reserva_id)
+    formulario = ReservaActualizarcodigoForm(datosFormulario,
+            initial={
+                'codigo_descueto': reserva['codigo_descueto'],
+            }
+    )
+    if (request.method == "POST"):
+        try:
+            formulario = ReservaActualizarcodigoForm(request.POST)
+            headers = crear_cabecera()
+            datos = request.POST.copy()
+            response = requests.patch(
+                BASE_API_URL + version + 'Reserva/actualizar/codigo/'+str(reserva_id),
+                headers=headers,
+                data=json.dumps(datos)
+            )
+            if(response.status_code == requests.codes.ok):
+                return redirect("mostrar_reserva",reserva_id=reserva_id)
+            else:
+                print(response.status_code)
+                response.raise_for_status()
+
+        except HTTPError as http_err:
+            print(f'Hubo un error en la petición: {http_err}')
+
+            if(response.status_code == 400):
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error,errores[error])
+                return render(request, 
+                            'Formularios/Reservas/actualizar_codigo.html',
+                            {"formulario":formulario,"reserva":reserva})
+            else:
+                return mi_error_500(request)
+        except Exception as err:
+            print(f'Ocurrió un error: {err}')
+            return mi_error_500(request)
+    return render(request, 'Formularios/Reservas/actualizar_codigo.html',{"formulario":formulario,"reserva":reserva})
+
 #------------------------------------------------Formularios_Eliminar----------------------------------------------------------------------
 
 

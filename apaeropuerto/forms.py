@@ -321,3 +321,8 @@ class ReservaForm(forms.Form):
 
         )
 
+class ReservaActualizarcodigoForm(forms.Form):
+    codigo_descueto = forms.CharField(label="Codigo de descuento",
+                             required=True, 
+                             max_length=200,
+                             help_text="100 caracteres como máximo")
