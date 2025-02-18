@@ -491,6 +491,14 @@ git push -u origin nombre-de-la-rama
 4.  git checkout rama1
 5.  git pull origin rama1
 
+pasar datos de rama1 a main
+1. git merge -X ours rama1
+2. git checkout --ours .
+3. git add .
+4. git commit -m "Forzando fusión manteniendo rama1"
+5. git push origin main
+
+
 
 Plegar todo: Ctrl + K, Ctrl + 0
 Expandir todo: Ctrl + K, Ctrl + J
