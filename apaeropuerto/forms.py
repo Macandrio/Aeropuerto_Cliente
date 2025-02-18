@@ -372,5 +372,8 @@ class VueloForm(forms.Form):
 
         )
 
-        
-
+class VueloActualizarcodigoForm(forms.Form):
+    hora_llegada = forms.DateTimeField(label="Hora de la Llegada",
+                                        initial=datetime.datetime.today,
+                                        widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+                                        )

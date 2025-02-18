@@ -792,6 +792,51 @@ def Reserva_actualizar_codigo_descuento(request,reserva_id):
             return mi_error_500(request)
     return render(request, 'Formularios/Reservas/actualizar_codigo.html',{"formulario":formulario,"reserva":reserva})
 
+def Vuelo_actualizar_hora_llegada(request,vuelo_id):
+   
+    datosFormulario = None
+    
+    if request.method == "POST":
+        datosFormulario = request.POST
+    
+    vuelo = helper.obtener_Vuelos_id(vuelo_id)
+    formulario = VueloActualizarcodigoForm(datosFormulario,
+            initial={
+                'hora_llegada': vuelo['hora_llegada'],
+            }
+    )
+    if (request.method == "POST"):
+        try:
+            formulario = VueloActualizarcodigoForm(request.POST)
+            headers = crear_cabecera()
+            datos = request.POST.copy()
+            response = requests.patch(
+                BASE_API_URL + version + 'Vuelo/actualizar/hora_llegada/'+str(vuelo_id),
+                headers=headers,
+                data=json.dumps(datos)
+            )
+            if(response.status_code == requests.codes.ok):
+                return redirect("mostrar_vuelo",vuelo_id=vuelo_id)
+            else:
+                print(response.status_code)
+                response.raise_for_status()
+
+        except HTTPError as http_err:
+            print(f'Hubo un error en la petición: {http_err}')
+
+            if(response.status_code == 400):
+                errores = response.json()
+                for error in errores:
+                    formulario.add_error(error,errores[error])
+                return render(request, 
+                            'Formularios/Vuelo/actualizar_estado.html',
+                            {"formulario":formulario,"vuelo":vuelo})
+            else:
+                return mi_error_500(request)
+        except Exception as err:
+            print(f'Ocurrió un error: {err}')
+            return mi_error_500(request)
+    return render(request, 'Formularios/Vuelo/actualizar_estado.html',{"formulario":formulario,"vuelo":vuelo})
 #------------------------------------------------Formularios_Eliminar----------------------------------------------------------------------
 
 

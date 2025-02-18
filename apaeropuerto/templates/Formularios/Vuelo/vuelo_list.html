@@ -50,12 +50,12 @@
                                 <span>{% bs_icon 'trash' %}</span>
                             </button> 
                         </form>
-                        {% comment %} <!-- Botón Actualizar codigo -->
+                        <!-- Botón Actualizar codigo -->
                         <button type="button" class="btn btn-outline-warning"> 
-                            <a href="{% url 'vuelo_actualizar_codigo_descuento' vuelo.id %}">
-                                <span>{% bs_icon 'pencil-square' %}</span> Actualizar Codigo de descuento
+                            <a href="{% url 'Vuelo_actualizar_hora_llegada' vuelo.id %}">
+                                <span>{% bs_icon 'pencil-square' %}</span> Actualizar Estado
                             </a>
-                        </button> {% endcomment %}
+                        </button>
                     </div>
                 </div>
             </div>

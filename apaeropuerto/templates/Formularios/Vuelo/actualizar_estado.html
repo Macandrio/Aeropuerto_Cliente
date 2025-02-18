@@ -2,22 +2,21 @@
 
 {% block contenido %}
 <div class="container mt-5">
-    <h1 class="text-center">Modificar Reserva</h1>
-
+    <h1 class="text-center">Modificar Vuelo</h1>
 
     <!-- Formulario -->
     <form method="post" action="">
         {% csrf_token %}
         <div class="mb-3">
-            {{ formulario.codigo_descueto.label_tag }}
-            {{ formulario.codigo_descueto }}
-            {% if formulario.codigo_descueto.errors %}
-                <div class="text-danger">{{ formulario.codigo_descueto.errors }}</div>
+            {{ formulario.hora_llegada.label_tag }}
+            {{ formulario.hora_llegada }}
+            {% if formulario.hora_llegada.errors %}
+                <div class="text-danger">{{ formulario.hora_llegada.errors }}</div>
             {% endif %}
         </div>
         <div class="d-flex justify-content-center">
             <button type="submit" class="btn btn-success">Guardar Cambios</button>
-            <a href="{% url 'reserva_listar_api' %}" class="btn btn-secondary ms-3">Cancelar</a>
+            <a href="{% url 'vuelo_listar_api' %}" class="btn btn-secondary ms-3">Cancelar</a>
         </div>
     </form>
 </div>
