@@ -49,5 +49,6 @@ urlpatterns = [
     path('Aeropuerto/eliminar/<int:aeropuerto_id>',views.Aeropuerto_eliminar, name='Aeropuerto_eliminar'),
     path('Aerolinea/eliminar/<int:aerolinea_id>',views.Aerolinea_eliminar, name='Aerolinea_eliminar'),
     path('Reserva/eliminar/<int:reserva_id>',views.Reserva_eliminar, name='Reserva_eliminar'),
+    path('Vuelo/eliminar/<int:vuelo_id>',views.Vuelo_eliminar, name='Vuelo_eliminar'),
 
 ]

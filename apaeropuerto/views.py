@@ -900,6 +900,26 @@ def Reserva_eliminar(request,reserva_id):
         return mi_error_500(request)
     return redirect('reserva_listar_api')
 
+def Vuelo_eliminar(request,vuelo_id):
+    try:
+        headers = crear_cabecera()
+        response = requests.delete(
+           BASE_API_URL + version + 'Vuelo/eliminar/'+str(vuelo_id),
+            headers=headers,
+        )
+
+        if(response.status_code == requests.codes.ok):
+            mensaje = response.text.strip()  # ✅ Extraer el mensaje de la API sin validaciones
+            messages.success(request, mensaje)
+            return redirect("vuelo_listar_api")
+        else:
+            print(response.status_code)
+            response.raise_for_status()
+    except Exception as err:
+        print(f'Ocurrió un error: {err}')
+        return mi_error_500(request)
+    return redirect('vuelo_listar_api')
+
 #------------------------------------------------Páginas de Error-----------------------------------------------------------------------------
 
 
