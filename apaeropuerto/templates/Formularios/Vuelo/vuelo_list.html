@@ -1,0 +1,70 @@
+{% extends 'Principal.html' %}
+
+{% block contenido %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<h2 class="text-center text-secondary my-4">Vuelos</h2>
+
+<div class="row">
+    {% if vuelos %}
+        {% for vuelo in vuelos %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">vuelo ID: {{ vuelo.id }}</h5>
+                    <p class="card-text">
+                        <strong>Salida:</strong> {{ vuelo.hora_salida }}<br>
+                        <strong>Llegada:</strong> {{ vuelo.hora_llegada }}<br>
+                        <strong>Estado:</strong> {{ vuelo.estado }}<br>
+                        <strong>Duracion:</strong> {{ vuelo.duracion }}<br>
+                        <strong>Origen:</strong> {{ vuelo.origen.nombre }}<br>
+                        <strong>Destino:</strong> {{ vuelo.destino.nombre }}<br>
+                        {% for aerolinea in vuelo.aerolinea %}
+                        <strong>Aeropuerto :</strong>{{ aerolinea.nombre }}{% if not forloop.last %}, {% endif %}<br>
+                    {% endfor %}
+                    <br>
+                    </p>
+                </div>
+                <div class="card-footer text-center">
+                    {% load bootstrap_icons %}
+                    <div class="row btn-group">
+                        <div class="mb-2">
+                            <button type="button" 
+                                    class="btn btn-outline-primary"> 
+                                    <a href="{% url 'Vuelo_editar' vuelo.id %}" ><span>{% bs_icon 'pencil' %}</span></a> 
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <form  method="post"> 
+                            {% csrf_token %}
+                            <button class="btn btn-danger" type="submit">
+                                <span>{% bs_icon 'trash' %}</span>
+                            </button> 
+                        </form>
+                        {% comment %} <!-- Botón Actualizar codigo -->
+                        <button type="button" class="btn btn-outline-warning"> 
+                            <a href="{% url 'vuelo_actualizar_codigo_descuento' vuelo.id %}">
+                                <span>{% bs_icon 'pencil-square' %}</span> Actualizar Codigo de descuento
+                            </a>
+                        </button> {% endcomment %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <p class="text-center text-danger">No se encontraron resultados.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

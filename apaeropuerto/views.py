@@ -93,7 +93,7 @@ def reserva_listar_api(request):
     reservas = response.json()
     return render(request, 'paginas/reserva_list.html', {'reservas': reservas})
 
-def vueloaerolinea_listar_api(request):
+def vuelo_listar_api(request):
     if (request.user.is_anonymous==False):     
         if (request.user and request.user.rol == 1):       
             headers = {'Authorization': 'Bearer '+env('Admin')} 
@@ -103,10 +103,23 @@ def vueloaerolinea_listar_api(request):
             headers = {'Authorization': 'Bearer '+env('GERENTE')}
     else:
         headers = {'Authorization': 'Bearer '+env('PASAJERO')}
-    response = requests.get(BASE_API_URL + version + 'Vueloaerolinea', headers=headers)
-    vueloaerolinea = response.json()
-    return render(request, 'paginas/vuelo_aerolinea_list.html', {'vueloaerolinea': vueloaerolinea})
+    response = requests.get(BASE_API_URL + version + 'Vuelo', headers=headers)
+    vuelos = response.json()
+    return render(request, 'paginas/vuelo_list.html', {'vuelos': vuelos})
 
+def vuelo_listar_api_botones(request):
+    if (request.user.is_anonymous==False):     
+        if (request.user and request.user.rol == 1):       
+            headers = {'Authorization': 'Bearer '+env('Admin')} 
+        elif (request.user and request.user.rol == 2):
+            headers = {'Authorization': 'Bearer '+env('PASAJERO')} 
+        else:
+            headers = {'Authorization': 'Bearer '+env('GERENTE')}
+    else:
+        headers = {'Authorization': 'Bearer '+env('PASAJERO')}
+    response = requests.get(BASE_API_URL + version + 'Vuelo', headers=headers)
+    vuelos = response.json()
+    return render(request, 'Formularios/Vuelo/vuelo_list.html', {'vuelos': vuelos})
 
 #------------------------------------------------Formularios Buscar-----------------------------------------------------------------------------
 
@@ -132,7 +145,6 @@ def Aeropuerto_busqueda_simple(request):
         formulario = BusquedaAeropuertoForm()
 
     return render(request, 'Formularios/Aeropuerto/buscar.html',{"formulario": formulario})
-
 
 def Aeropuerto_busqueda_avanzada(request):
     if len(request.GET) > 0:
@@ -162,7 +174,6 @@ def Aeropuerto_busqueda_avanzada(request):
 
     return render(request, 'Formularios/Aeropuerto/busqueda_avanzada.html', {"formulario": formulario})
 
-
 def Aerolinea_busqueda_avanzada(request):
     if len(request.GET) > 0:
         formulario = BusquedaAvanzadaAerolineaForm(request.GET)
@@ -190,7 +201,6 @@ def Aerolinea_busqueda_avanzada(request):
         formulario = BusquedaAvanzadaAerolineaForm(None)
 
     return render(request, 'Formularios/Aerolinea/busqueda_avanzada.html', {"formulario": formulario})
-
 
 def Estadisticas_busqueda_avanzada(request):
     if len(request.GET) > 0:
@@ -249,36 +259,6 @@ def Reserva_busqueda_avanzada(request):
         formulario = BusquedaAvanzadaReserva(None)
 
     return render(request, 'Formularios/Reservas/busqueda_avanzada.html', {"formulario": formulario})
-
-def Vuelo_Aerolinea_busqueda_avanzada(request):
-    if len(request.GET) > 0:
-        formulario = BusquedaAvanzadaVueloAerolineaForm(request.GET)
-
-        if formulario.is_valid():
-            try:
-                headers = crear_cabecera()
-                response = requests.get(
-                    BASE_API_URL + version + 'VueloAerolinea/busqueda_avanzada',
-                    headers=headers,
-                    params=formulario.cleaned_data
-                )
-
-                #  Detectar formato de respuesta (JSON o XML)
-                vueloaerolinea = transformar_respuestas(response)
-
-                print(" Datos recibidos:", vueloaerolinea)
-
-                if response.status_code == requests.codes.ok:
-                    return render(request, 'Formularios/VueloAerolinea/busqueda_avanzada.html', {"vueloaerolinea": vueloaerolinea,"formulario": formulario})
-                else:
-                    return manejar_errores_api(response, request, formulario, "Formularios/VueloAerolinea/busqueda_avanzada.html")
-
-            except Exception as err:
-                return manejar_excepciones_api(err, request)
-    else:
-        formulario = BusquedaAvanzadaVueloAerolineaForm(None)
-
-    return render(request, 'Formularios/VueloAerolinea/busqueda_avanzada.html', {"formulario": formulario})
 
 #------------------------------------------------Formularios_Crear-----------------------------------------------------------------------------
 
@@ -364,7 +344,7 @@ def Reserva_crear(request):
             headers =  crear_cabecera()
 
             datos = formulario.data.copy()
-            
+            datos["metodo_pago"] = request.POST.get("metodo_pago")
 
             
             response = requests.post(
@@ -385,50 +365,38 @@ def Reserva_crear(request):
          formulario = ReservaForm(None)
     return render(request, 'Formularios/Reservas/create.html',{"formulario":formulario})
 
-def VueloAerolinea_crear(request):
+def Vuelo_crear(request):
     
     if (request.method == "POST"):
         try:
-            formulario = VueloAerolineaForm(request.POST)
+            formulario = VueloForm(request.POST)
 
             headers =  crear_cabecera()
 
             datos = formulario.data.copy()
-
-            datos["vuelo"] = request.POST.getlist("vuelo")
-            datos["aeroliena"] = request.POST.getlist("aeroliena")
-            #se asegura de que todas las claves 'fecha_reserva_year', 'fecha_reserva_month' y 'fecha_reserva_day' estén presentes en el diccionario
-            if all(k in datos for k in ['fecha_operacion_year', 'fecha_operacion_month', 'fecha_operacion_day']):
-                datos["fecha_operacion"] = str(
-                                                datetime.datetime(year=int(datos['fecha_operacion_year']),
-                                                            month=int(datos['fecha_operacion_month']),
-                                                            day=int(datos['fecha_operacion_day'])),
-                                                            hour=0,  # Puedes cambiar la hora según necesidad
-                                                            minute=0,
-                                                            second=0
-                                                )
-            else:
-                print('faltand atos')
-            
+            datos["origen"] = request.POST.get("origen")
+            datos["destino"] = request.POST.get("destino")
+            datos["aerolinea"] = request.POST.getlist("aerolinea")
+            datos['estado'] = True if datos.get('estado') == 'on' else False  # Convertir 'on' a True
 
             
             response = requests.post(
-                BASE_API_URL + version +'VueloAerolinea/Crear',
+                BASE_API_URL + version +'Vuelo/Crear',
                 headers=headers,
                 data=json.dumps(datos)
             )
 
             if response.status_code == requests.codes.ok:
                 messages.success(request, response.json())  # ✅ Mostrar mensaje en la plantilla
-                return redirect("vueloaerolinea_listar_api")
+                return redirect("vuelo_listar_api")
             else:
-                return manejar_errores_api(response, request, formulario, "Formularios/vueloaerolinea/create.html")
+                return manejar_errores_api(response, request, formulario, "Formularios/Vuelo/create.html")
 
         except Exception as err:
             return manejar_excepciones_api(err, request)  
     else:
-         formulario = VueloAerolineaForm(None)
-    return render(request, 'Formularios/VueloAerolinea/create.html',{"formulario":formulario})
+         formulario = VueloForm(None)
+    return render(request, 'Formularios/Vuelo/create.html',{"formulario":formulario})
 
 #------------------------------------------------Formularios_Obtener-----------------------------------------------------------------------------
 
@@ -444,6 +412,11 @@ def Reserva_obtener(request,reserva_id):
     reserva = helper.obtener_Reserva(reserva_id)
     print(" Datos recibidos:", reserva)
     return render(request, 'Formularios/Reservas/reserva_mostrar.html',{"reserva":reserva})
+
+def Vuelo_obtener(request,vuelo_id):
+    vuelo = helper.obtener_Vuelos_id(vuelo_id)
+    print(" Datos recibidos:", vuelo)
+    return render(request, 'Formularios/Vuelo/vuelo_mostrar.html',{"vuelo":vuelo})
 
 
 #------------------------------------------------Formularios_Editar-----------------------------------------------------------------------------
@@ -503,6 +476,7 @@ def aeropuerto_editar(request,aeropuerto_id):
                 return manejar_errores_api(request,cliente.codigoRespuesta)
     return render(request, 'Formularios/Aeropuerto/editar.html',{"formulario":formulario,"aeropuerto":aeropuerto})
 
+#ManyToOne
 def Aerolinea_editar(request,aerolinea_id):
    
     datosFormulario = None
@@ -559,6 +533,7 @@ def Aerolinea_editar(request,aerolinea_id):
                 return manejar_errores_api(request,cliente.codigoRespuesta)
     return render(request, 'Formularios/Aerolinea/editar.html',{"formulario":formulario,"aerolinea":aerolinea})
 
+#ManyToMany
 def Reserva_editar(request,reserva_id):
    
     datosFormulario = None
@@ -613,6 +588,69 @@ def Reserva_editar(request,reserva_id):
             else:
                 return manejar_errores_api(request,cliente.codigoRespuesta)
     return render(request, 'Formularios/Reservas/editar.html',{"formulario":formulario,"reserva":reserva})
+
+#ManyToMany Tablaintermedia
+def Vuelo_editar(request,vuelo_id):
+   
+    datosFormulario = None
+    
+    # ✅ Si el usuario envió datos (POST), se almacenan en `datosFormulario`
+    if request.method == "POST":
+        datosFormulario = request.POST 
+    
+    # ✅ Obtener los datos actuales del aeropuerto desde la API
+    vuelo = helper.obtener_Vuelos_id(vuelo_id) 
+    print("📩 DEBUG - vuelo['origen']:", vuelo["origen"])
+
+    #Crear el Formulario con Datos Iniciales
+    formulario = VueloForm(datosFormulario,
+            initial={
+                #'campo': modelo[dato]
+                'hora_salida': vuelo['hora_salida'],
+                'hora_llegada': vuelo["hora_llegada"],
+                'estado': vuelo['estado'],
+                'duracion': vuelo['duracion'],
+                'origen': vuelo["origen"]["id"],
+                'destino': vuelo["destino"]["id"],
+                'aerolinea': [indice['id'] for indice in vuelo['aerolinea']]
+            }
+    )
+
+    # ✅ Si el usuario envió un formulario (POST), procesamos los datos
+    if (request.method == "POST"):
+        formulario = VueloForm(request.POST)
+        datos = request.POST.copy()
+        datos["origen"] = request.POST.get("origen")
+        datos["destino"] = request.POST.get("destino")
+        datos["aerolinea"] = request.POST.getlist("aerolinea")
+        datos['estado'] = True if datos.get('estado') == 'on' else False  # Convertir 'on' a True
+        
+        cliente = cliente_api(
+                                env("Admin"),
+                                "PUT",
+                                'Vuelo/editar/'+str(vuelo_id),
+                                datos
+                            )
+        
+        cliente.realizar_peticion_api()
+        print("📩 DEBUG - Datos enviados a la API:", datos)
+        print("📩 DEBUG - Código de respuesta API:", cliente.codigoRespuesta)
+
+        #Manejar la Respuesta de la API
+        if(cliente.es_respuesta_correcta()):
+            # ✅ Guardar el mensaje directamente como lo envía la API
+            mensaje = cliente.datosRespuesta
+
+            # ✅ Guardar mensaje en Django Messages
+            messages.success(request, mensaje)
+
+            return redirect("mostrar_vuelo",vuelo_id=vuelo_id)
+        else:
+            if(cliente.es_error_validacion_datos()):
+                cliente.incluir_errores_formulario(formulario)
+            else:
+                return manejar_errores_api(request,cliente.codigoRespuesta)
+    return render(request, 'Formularios/Vuelo/editar.html',{"formulario":formulario,"vuelo":vuelo})
 
 #------------------------------------------------Formularios_Actualizar----------------------------------------------------------------------
 

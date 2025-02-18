@@ -70,6 +70,13 @@ class helper:
             lista_vuelos.append((vuelo["id"],vuelo["id"]))
         return lista_vuelos
     
+    def obtener_Vuelos_id(id):
+        # obtenemos el Vuelo
+        headers = {'Authorization': 'Bearer '+env("Admin")} 
+        response = requests.get(BASE_API_URL + version + 'Vuelos/' + str(id) ,headers=headers)
+        vuelo = response.json()
+        return vuelo
+    
     def obtener_Reserva(id):
         # obtenemos el Reserva
         headers = {'Authorization': 'Bearer '+env("Admin")} 

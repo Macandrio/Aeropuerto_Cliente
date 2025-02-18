@@ -3,7 +3,7 @@
 {% block contenido %}
 
 {% load django_bootstrap5 %}
-<form action="{% url 'Reserva_editar' reserva.id %}" method="post">
+<form action="{% url 'Vuelo_editar' vuelo.id %}" method="post">
     {% csrf_token %}
     
     {% bootstrap_form formulario %}

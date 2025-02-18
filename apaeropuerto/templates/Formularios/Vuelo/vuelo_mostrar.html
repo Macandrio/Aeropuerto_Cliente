@@ -3,18 +3,18 @@
 {% block contenido %}
 <div class="container mt-4">
     <div class="card shadow-lg p-4 bg-white rounded">
-        <h1 class="display-4 text-primary text-center">✈️ Reserva: {{ reserva.id }}</h1>
+        <h1 class="display-4 text-primary text-center">✈️ vuelo: {{ vuelo.id }}</h1>
         
 
         <div class="col-sm-12 mb-3">
-            {% include "Listas/Reserva.html" %}
+            {% include "Listas/Vuelo.html" %}
         </div>
 
         <div class="text-center mt-4">
-            <a href="{% url 'Reserva_busqueda_avanzada' %}" class="btn btn-secondary">
+            <a href="{% url 'vuelo_listar_api_botones' %}" class="btn btn-secondary">
                 🔙 Volver a la Búsqueda
             </a>
-            <a href="{% url 'reserva_listar_api' %}" class="btn btn-warning">
+            <a href="{% url 'vuelo_listar_api' %}" class="btn btn-warning">
                 ✏️ Ver la lista completa
             </a>
         </div>

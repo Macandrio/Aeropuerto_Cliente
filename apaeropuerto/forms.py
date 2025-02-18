@@ -326,85 +326,41 @@ class ReservaActualizarcodigoForm(forms.Form):
                              max_length=200,
                              help_text="100 caracteres como máximo")
     
-#---------------------------------------------VueloAerolinea-----------------------------------------------------------------------
+#---------------------------------------------Vuelo-----------------------------------------------------------------------
 
 
-class BusquedaAvanzadaVueloAerolineaForm(forms.Form):
-
-    tipos_clase_avion = [
-    ("", "Ninguno"),
-    ("E", "Economy"),
-    ("B", "Business"),
-    ("F", "First Class"),
-    ("P", "Premium Economy"),
-    ("L", "Luxury"),
-    ("S", "Standard"),
-    ("H", "Hybrid"),
-    ("X", "Extra Legroom"),
-    ("R", "Regional"),
-    ("C", "Charter")
-    ]
-
-    clase = forms.ChoiceField(choices=tipos_clase_avion,required=False)
-
-    fecha_operacion = forms.DateField(
-        required=False,
-        widget=forms.DateTimeInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Fecha y Hora',
-            'type' : 'date'
-        })
-    )
-
-    estado = forms.CharField()
-    incidencias = forms.CharField()
-
-class VueloAerolineaForm(forms.Form):
+class VueloForm(forms.Form):    
     
-    tipos_clase_avion = [
-    ("", "Ninguno"),
-    ("E", "Economy"),
-    ("B", "Business"),
-    ("F", "First Class"),
-    ("P", "Premium Economy"),
-    ("L", "Luxury"),
-    ("S", "Standard"),
-    ("H", "Hybrid"),
-    ("X", "Extra Legroom"),
-    ("R", "Regional"),
-    ("C", "Charter")
-    ]
-    
-    clase = forms.ChoiceField(choices=tipos_clase_avion,
-                             required=True, 
-                               initial="")
-    
-    estado = forms.CharField(label="Estado del avion",
-                            required=False, 
-                            max_length=100,
-                            help_text="100 caracteres como máximo")
-    
-    
-    fecha_operacion = forms.DateTimeField(label="Fecha de la operacion",
+    hora_salida = forms.DateTimeField(label="Hora de la salida",
                                         initial=datetime.datetime.today,
                                         widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
                                         )
-    
-    incidencias = forms.CharField(label="Incidencias del Aeropuerto",
-                            required=False, 
-                            max_length=100,
-                            help_text="100 caracteres como máximo")
+    hora_llegada = forms.DateTimeField(label="Hora de la Llegada",
+                                        initial=datetime.datetime.today,
+                                        widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+                                        )
+    estado = forms.BooleanField(initial=False, required=False)
 
 
     def __init__(self, *args, **kwargs):
         
-        super(VueloAerolineaForm, self).__init__(*args, **kwargs)
+        super(VueloForm, self).__init__(*args, **kwargs)
         
-        vuelosDisponibles = helper.obtener_Vuelos()
-        self.fields["vuelo"] = forms.MultipleChoiceField(
-            choices=vuelosDisponibles,
+        aeropuertosDisponibles = helper.obtener_Aeropuertos()
+        aeropuertosDisponibles.insert(0, ("","Ninguno"))  # Agregar opción al inicio
+        self.fields["origen"] = forms.ChoiceField(
+            choices=aeropuertosDisponibles,
             required=True,
-            help_text="Mantén pulsada la tecla control para seleccionar varios elementos"
+            help_text="Selecciona un Aeropuerto"
+
+        )
+
+        aeropuertosDisponibles = helper.obtener_Aeropuertos()
+        aeropuertosDisponibles.insert(0, ("","Ninguno"))  # Agregar opción al inicio
+        self.fields["destino"] = forms.ChoiceField(
+            choices=aeropuertosDisponibles,
+            required=True,
+            help_text="Selecciona un Aeropuerto"
 
         )
 
