@@ -435,7 +435,7 @@ Esta el usuario gerente que debe poder hace las estadisticas de vuelo.
 
 * Refactorizar el código, para que sólo se controle errores, se hagan las peticiones y se gestionen las respuesta desde la clase helper(1 punto)
 
-Realizar las 4 operaciones POST, PUT, PATCH y DELETE, desde otra aplicación que no sea el cliente de DJANGO, por ejemplo POSTMAN(No es necesario que sea este, y podemos usar alguno online).Incluir un documento con capturas (1 punto)
+* Realizar las 4 operaciones POST, PUT, PATCH y DELETE, desde otra aplicación que no sea el cliente de DJANGO, por ejemplo POSTMAN(No es necesario que sea este, y podemos usar alguno online).Incluir un documento con capturas (1 punto)
 
 Realizar todas las operaciones de un modelo, pero usando ViewSets. Podéis usar un modelo repetido, para ver las diferencias entre un caso y otro.(1 punto)
 
@@ -492,11 +492,11 @@ git push -u origin nombre-de-la-rama
 5.  git pull origin rama1
 
 pasar datos de rama1 a main
-1. git merge -X ours rama1
-2. git checkout --ours .
-3. git add .
-4. git commit -m "Forzando fusión manteniendo rama1"
-5. git push origin main
+1. git pull origin main
+2. git reset --hard rama1
+3. git push --force origin main
+
+
 
 
 
