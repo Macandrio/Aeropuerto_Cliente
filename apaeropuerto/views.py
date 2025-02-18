@@ -364,17 +364,6 @@ def Reserva_crear(request):
             headers =  crear_cabecera()
 
             datos = formulario.data.copy()
-            if all(k in datos for k in ['fecha_reserva_year', 'fecha_reserva_month', 'fecha_reserva_day']):
-                datos["fecha_reserva"] = str(
-                                                datetime.date(year=int(datos['fecha_reserva_year']),
-                                                            month=int(datos['fecha_reserva_month']),
-                                                            day=int(datos['fecha_reserva_day'])),
-                                                            hour=0,  # Puedes cambiar la hora según necesidad
-                                                            minute=0,
-                                                            second=0
-                                                )
-            else:
-                print('faltand atos')
             
 
             
@@ -585,12 +574,12 @@ def Reserva_editar(request,reserva_id):
     formulario = ReservaForm(datosFormulario,
             initial={
                 #'campo': modelo[dato]
-                'fecha_reserva': datetime.datetime.strptime(reserva['fecha_reserva'], "%Y-%m-%dT%H:%M:%S").date(),
+                'fecha_reserva': reserva['fecha_reserva'],
                 'codigo_descueto': reserva["codigo_descueto"],
                 'metodo_pago': reserva['metodo_pago'],
                 'estado_de_pago': reserva['estado_de_pago'],
-                'pasajero': reserva['pasajero'],
-                'vuelo': reserva['vuelo'],
+                'pasajero': reserva["pasajero"]["usuario"],
+                'vuelo': reserva["vuelo"]["id"],
             }
     )
 
