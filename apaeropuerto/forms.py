@@ -377,3 +377,20 @@ class VueloActualizarcodigoForm(forms.Form):
                                         initial=datetime.datetime.today,
                                         widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
                                         )
+
+
+
+class RegistroForm(UserCreationForm): 
+    roles = (
+                                ("","NINGUNO"),
+                                (1, 'Cliente'),
+                                (2, 'Gerente'),
+            )   
+    rol = forms.ChoiceField(choices=roles)  
+    class Meta:
+        model = User
+        fields = ('username', 'first_name' ,'last_name', 'email', 'password1', 'password2','rol')
+        
+class LoginForm(forms.Form):
+    usuario = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput())

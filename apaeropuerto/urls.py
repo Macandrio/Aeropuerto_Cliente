@@ -51,4 +51,8 @@ urlpatterns = [
     path('Reserva/eliminar/<int:reserva_id>',views.Reserva_eliminar, name='Reserva_eliminar'),
     path('Vuelo/eliminar/<int:vuelo_id>',views.Vuelo_eliminar, name='Vuelo_eliminar'),
 
+    #Usuario
+    path('registrar',views.registrar_usuario,name='registrar_usuario'),
+    path('login',views.login,name='login'),
+    path('logout',views.logout,name='logout'),
 ]

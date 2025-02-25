@@ -95,3 +95,22 @@ class helper:
         for aerolinea in aerolineas:
             lista_Aerolineas.append((aerolinea["id"],aerolinea["id"]))
         return lista_Aerolineas
+    
+
+
+    def obtener_token_session(usuario,password):
+        token_url = BASE_API_URL + '/oauth2/token/'
+        data = {
+            'grant_type': 'password',
+            'username': usuario,
+            'password': password,
+            'client_id': 'apaeropuerto',
+            'client_secret': 'apaeropuerto',
+        }
+
+        response = requests.post(token_url, data=data)
+        respuesta = response.json()
+        if response.status_code == 200:
+            return respuesta.get('access_token')
+        else:
+            raise Exception(respuesta.get("error_description"))
