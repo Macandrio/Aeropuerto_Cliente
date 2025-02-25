@@ -33,6 +33,32 @@
                     {% include 'Estructura/menu.html' %}
                     {% include 'Estructura/menuformulario.html' %}
                 </div>
+
+                <div class="ml-2">
+                    {% if not request.session.token %}
+                    <a class="btn btn-outline-warning" href="{% url 'login' %}">
+                        Login
+                    </a>
+                    {% endif %}
+            
+                    {% if not request.session.token %}
+                      <a class="btn btn-outline-warning" href="{% url 'registrar_usuario' %}">
+                          Registrarse
+                      </a>
+                    {% endif %}
+            
+                    {% if request.session.token %}
+                    <form action="{% url 'logout' %}" class="d-flex align-items-center gap-2 m-3" role="search" method="POST">
+                        {% csrf_token %}
+                        <p class="mb-0 text-dark fw-bold">
+                            <i class="fas fa-user text-dark"></i> {{ request.session.usuario.username }}
+                        </p>
+                        <button class="btn btn-light btn-outline-dark" type="submit">Desconectarse</button>
+                    </form>
+                    {% endif %}
+                     
+
+                  </div>
             </div>
         </header>
 

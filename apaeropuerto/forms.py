@@ -389,7 +389,7 @@ class RegistroForm(UserCreationForm):
     rol = forms.ChoiceField(choices=roles)  
     class Meta:
         model = User
-        fields = ('username', 'first_name' ,'last_name', 'email', 'password1', 'password2','rol')
+        fields = ('username', 'email', 'password1', 'password2','rol')
         
 class LoginForm(forms.Form):
     usuario = forms.CharField()

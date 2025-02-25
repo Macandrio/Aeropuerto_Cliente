@@ -104,8 +104,8 @@ class helper:
             'grant_type': 'password',
             'username': usuario,
             'password': password,
-            'client_id': 'apaeropuerto',
-            'client_secret': 'apaeropuerto',
+            'client_id': 'mi_aplicacion',
+            'client_secret': 'mi_aplicacion',
         }
 
         response = requests.post(token_url, data=data)
