@@ -24,6 +24,15 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env("SECRET_KEY")
 
 
+from dotenv import load_dotenv
+
+# Cargar variables del archivo .env
+load_dotenv()
+
+# Obtener el token (opcionalmente puedes usarlo en settings.py)
+TOKEN_ACCESO = os.getenv("TOKEN_ACCESO")
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 

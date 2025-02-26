@@ -3,20 +3,24 @@
         <i class="fa-solid fa-bars"></i> Menú
     </button>
     <ul class="dropdown-menu dropdown-menu-end">
-        <li>
-            <a class="dropdown-item" href="{% url 'aeropuerto_listar_api' %}"><i class="fa-solid fa-building"></i> Aeropuertos</a>
-        </li>
-        <li>
-            <a class="dropdown-item" href="{% url 'aerolinea_listar_api' %}"><i class="fa-solid fa-building"></i> Aerolineas</a>
-        </li>
-        <li>
-            <a class="dropdown-item" href="{% url 'vuelo_listar_api' %}"><i class="fa-solid fa-building"></i> Vuelos</a>
-        </li>
-        <li>
-            <a class="dropdown-item" href="{% url 'reserva_listar_api' %}"><i class="fa-solid fa-building"></i> Reserva</a>
-        </li>
-        <li>
-            <a class="dropdown-item" href="{% url 'vuelo_listar_api_botones' %}"><i class="fa-solid fa-building"></i>lista Vuelos </a>
-        </li>
+        {% if request.session.usuario.rol == 2 %} <!-- Opciones para el rol PASAJERO -->
+            <li>
+                <a class="dropdown-item" href="{% url 'reserva_listar_api' %}"><i class="fa-solid fa-building"></i> Reserva</a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="{% url 'vuelo_listar_api' %}"><i class="fa-solid fa-building"></i> Vuelos</a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="{% url 'vuelo_listar_api_botones' %}"><i class="fa-solid fa-building"></i>Todos_Vuelos</a>
+            </li>
+        {% elif request.session.usuario.rol == 3 %} <!-- Opciones para el rol GERENTE -->
+            <li>
+                <a class="dropdown-item" href="{% url 'aeropuerto_listar_api' %}"><i class="fa-solid fa-building"></i> Aeropuertos</a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="{% url 'aerolinea_listar_api' %}"><i class="fa-solid fa-building"></i> Aerolineas</a>
+            </li>
+        {% endif %}
     </ul>
 </div>
+

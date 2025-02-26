@@ -440,7 +440,27 @@ Realizar las 4 operaciones POST, PUT, PATCH y DELETE, desde otra aplicación que
 Realizar todas las operaciones de un modelo, pero usando ViewSets. Podéis usar un modelo repetido, para ver las diferencias entre un caso y otro.(1 punto)
 
 Incluir en la aplicación algún modelo(Puede repetirse con alguno de los anteriores) un campo que sea un archivo, y gestionar las peticiones GET, POST, PUT, PATCH y DELETE de ese campo(1 punto)
+---------------------------------------------------------------------------------------------------------------------------
 
+* Añadir la gestión de login, registro y logout usando la API (1 punto)
+
+* Gestionar las peticiones a la API usando el token del usuario Logueado(1 punto)
+
+* Añadir los permisos correspondiente en la API y documentar en el README(API), que tipo de usuario tiene acceso a cada apartado (1 punto)
+
+Hacer dos peticiones GET donde se tenga en cuenta el usuario logueado y que usa el token (1 punto)
+
+Hacer dos peticiones POST donde se tenga en cuenta el usuario logueado y que usa el token, y no tengas que indicarlo en el formulario cliente (1 punto)
+
+Configurar CORS en vuestra aplicación y mostrar que funciona correctamente incluyendo en cliente una petición desde un fichero en javascript (1 punto)
+
+Crear una pequeña aplicación que realice peticiones a vuestra API de pythonanywhere con Angular o Vue.js (1 punto)
+
+Crear tutorial de vuestra aplicación, para que cualquier persona pueda usarla. Incluirlo en el README del cliente, para que se explique como desplegar la aplicación, y realizar una operación de GET, POST, PUT, DELETE y PATCH (1 punto)(Obligatorio)
+
+Realizar un video de presentación de vuestra aplicación que dure 2 minutos (1 punto)(Obligatorio)
+
+Dockerizar vuestra aplicación de cliente y de api. Incluir en el README que comando lanzar de docker para desplegar cada una de las aplicaciones.  (1 punto)
 
 -----------------------------------------------------Mis cosas----------------------------------------------------------------------
 # comandos :

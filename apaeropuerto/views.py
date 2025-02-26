@@ -10,6 +10,16 @@ import xml.etree.ElementTree as ET
 from .utils import *  # Importar las funciones
 from .helper import *
 from .cliente_api import *
+from dotenv import set_key
+import os
+from dotenv import load_dotenv
+
+
+
+load_dotenv()  # Cargar variables del entorno
+
+token = os.getenv("TOKEN_ACCESO")
+
 
 
 
@@ -25,7 +35,7 @@ version = env("version")
 
 def crear_cabecera():
     return {
-        'Authorization': 'Bearer '+env("Admin"),
+        'Authorization': 'Bearer '+token,
         "Content-Type": "application/json"
         }
 
@@ -37,17 +47,19 @@ def index(request):
         if(not "usuario" in request.session):
             request.session["usuario"] = request.user.usuario
     return render(request, 'index.html')
+
 #------------------------------------------------Listar--------------------------------------------------------------
+
 def aeropuerto_listar_api(request):
     if (request.user.is_anonymous==False):     
         if (request.user and request.user.rol == 1):       
-            headers = {'Authorization': 'Bearer '+env('Admin')} 
+            headers = {'Authorization': 'Bearer '+token} 
         elif (request.user and request.user.rol == 2):
-            headers = {'Authorization': 'Bearer '+env('PASAJERO')} 
+            headers = {'Authorization': 'Bearer '+token} 
         else:
-            headers = {'Authorization': 'Bearer '+env('GERENTE')}
+            headers = {'Authorization': 'Bearer '+token}
     else:
-        headers = {'Authorization': 'Bearer '+env('PASAJERO')}
+        headers = {'Authorization': 'Bearer '+token}
 
     response = requests.get(BASE_API_URL + version + 'Aeropuerto', headers=headers)
     aeropuertos = response.json()
@@ -56,70 +68,53 @@ def aeropuerto_listar_api(request):
 def aerolinea_listar_api(request):
     if (request.user.is_anonymous==False):     
         if (request.user and request.user.rol == 1):       
-            headers = {'Authorization': 'Bearer '+env('Admin')} 
+            headers = {'Authorization': 'Bearer '+token} 
         elif (request.user and request.user.rol == 2):
-            headers = {'Authorization': 'Bearer '+env('PASAJERO')} 
+            headers = {'Authorization': 'Bearer '+token} 
         else:
-            headers = {'Authorization': 'Bearer '+env('GERENTE')}
+            headers = {'Authorization': 'Bearer '+token}
     else:
-        headers = {'Authorization': 'Bearer '+env('PASAJERO')}
+        headers = {'Authorization': 'Bearer '+token}
     response = requests.get(BASE_API_URL + version + 'Aerolinea', headers=headers)
     aerolineas = response.json()
     return render(request, 'paginas/aerolinea_list.html', {'aerolineas': aerolineas})
 
-def vuelo_listar_api(request):
-    if (request.user.is_anonymous==False):     
-        if (request.user and request.user.rol == 1):       
-            headers = {'Authorization': 'Bearer '+env('Admin')} 
-        elif (request.user and request.user.rol == 2):
-            headers = {'Authorization': 'Bearer '+env('PASAJERO')} 
-        else:
-            headers = {'Authorization': 'Bearer '+env('GERENTE')}
-    else:
-        headers = {'Authorization': 'Bearer '+env('PASAJERO')}
-    response = requests.get(BASE_API_URL + version + 'Vuelo', headers=headers)
-    vuelos = response.json()
-    return render(request, 'paginas/vuelo_list.html', {'vuelos': vuelos})
-
 def reserva_listar_api(request):
-    if (request.user.is_anonymous==False):     
-        if (request.user and request.user.rol == 1):       
-            headers = {'Authorization': 'Bearer '+env('Admin')} 
-        elif (request.user and request.user.rol == 2):
-            headers = {'Authorization': 'Bearer '+env('PASAJERO')} 
-        else:
-            headers = {'Authorization': 'Bearer '+env('GERENTE')}
-    else:
-        headers = {'Authorization': 'Bearer '+env('PASAJERO')}
-    response = requests.get(BASE_API_URL + version + 'Reserva', headers=headers)
+    token = request.session.get("token")  # Asegúrate de que el usuario tenga un token almacenado
+
+    if not token:
+        print("❌ ERROR: No se encontró el token en la sesión.")
+        return render(request, 'error.html', {"error": "No tienes una sesión activa. Inicia sesión nuevamente."})
+
+    headers = {'Authorization': f'Bearer {token}'}
+
+    # 🔍 Imprimir el token antes de enviarlo
+    print("🔑 Token enviado en headers:", headers)
+
+    # headers = {'Authorization': 'Bearer '+ token}
+    response = requests.get(BASE_API_URL + version + 'Reservas', headers=headers)
     reservas = response.json()
     return render(request, 'paginas/reserva_list.html', {'reservas': reservas})
 
 def vuelo_listar_api(request):
-    if (request.user.is_anonymous==False):     
-        if (request.user and request.user.rol == 1):       
-            headers = {'Authorization': 'Bearer '+env('Admin')} 
-        elif (request.user and request.user.rol == 2):
-            headers = {'Authorization': 'Bearer '+env('PASAJERO')} 
-        else:
-            headers = {'Authorization': 'Bearer '+env('GERENTE')}
-    else:
-        headers = {'Authorization': 'Bearer '+env('PASAJERO')}
-    response = requests.get(BASE_API_URL + version + 'Vuelo', headers=headers)
+    token = request.session.get("token")
+    print('el token'+ token)
+    headers = {'Authorization': 'Bearer '+token}
+    response = requests.get(BASE_API_URL + version + 'Vuelos', headers=headers)
     vuelos = response.json()
     return render(request, 'paginas/vuelo_list.html', {'vuelos': vuelos})
 
 def vuelo_listar_api_botones(request):
     if (request.user.is_anonymous==False):     
         if (request.user and request.user.rol == 1):       
-            headers = {'Authorization': 'Bearer '+env('Admin')} 
+            headers = {'Authorization': 'Bearer '+token} 
         elif (request.user and request.user.rol == 2):
-            headers = {'Authorization': 'Bearer '+env('PASAJERO')} 
+            headers = {'Authorization': 'Bearer '+token} 
         else:
-            headers = {'Authorization': 'Bearer '+env('GERENTE')}
+            headers = {'Authorization': 'Bearer '+token}
     else:
-        headers = {'Authorization': 'Bearer '+env('PASAJERO')}
-    response = requests.get(BASE_API_URL + version + 'Vuelo', headers=headers)
+        headers = {'Authorization': 'Bearer '+token}
+    response = requests.get(BASE_API_URL + version + 'Vuelos', headers=headers)
     vuelos = response.json()
     return render(request, 'Formularios/Vuelo/vuelo_list.html', {'vuelos': vuelos})
 
@@ -454,7 +449,7 @@ def aeropuerto_editar(request,aeropuerto_id):
 
         #Enviar los Datos a la API REST
         cliente = cliente_api(
-                                env("Admin"),
+                                token,
                                 "PUT",
                                 'Aeropuerto/editar/'+str(aeropuerto_id),
                                 datos
@@ -511,7 +506,7 @@ def Aerolinea_editar(request,aerolinea_id):
         
         
         cliente = cliente_api(
-                                env("Admin"),
+                                token,
                                 "PUT",
                                 'Aerolinea/editar/'+str(aerolinea_id),
                                 datos
@@ -567,7 +562,7 @@ def Reserva_editar(request,reserva_id):
         
         
         cliente = cliente_api(
-                                env("Admin"),
+                                token,
                                 "PUT",
                                 'Reserva/editar/'+str(reserva_id),
                                 datos
@@ -628,7 +623,7 @@ def Vuelo_editar(request,vuelo_id):
         datos['estado'] = True if datos.get('estado') == 'on' else False  # Convertir 'on' a True
         
         cliente = cliente_api(
-                                env("Admin"),
+                                token,
                                 "PUT",
                                 'Vuelo/editar/'+str(vuelo_id),
                                 datos
@@ -839,6 +834,7 @@ def Vuelo_actualizar_hora_llegada(request,vuelo_id):
             print(f'Ocurrió un error: {err}')
             return mi_error_500(request)
     return render(request, 'Formularios/Vuelo/actualizar_estado.html',{"formulario":formulario,"vuelo":vuelo})
+
 #------------------------------------------------Formularios_Eliminar----------------------------------------------------------------------
 
 
@@ -934,7 +930,7 @@ def registrar_usuario(request):
                             "Content-Type": "application/json" 
                         }
                 response = requests.post(
-                    BASE_API_URL + version + 'registrar/usuario',
+                    BASE_API_URL + version + 'registrar/usuario/',
                     headers=headers,
                     data=json.dumps(formulario.cleaned_data)
                 )
@@ -980,6 +976,20 @@ def login(request):
                                 )
             request.session["token"] = token_acceso
             
+            # Guardar token en la sesión de Django
+            request.session["token"] = token_acceso
+
+            if not token_acceso:
+                print("❌ ERROR: No se recibió un token válido del servidor.")
+                return render(request, 'registration/login.html', {"form": formulario, "error": "No se recibió un token válido."})
+
+            print("🔑 Token recibido en login:", token_acceso)  # ✅ Verifica si el token es válido
+
+            # 🔹 Guardar el token en el archivo .env
+            env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".env"))
+            set_key(env_path, "TOKEN_ACCESO", token_acceso)
+            print("✅ Token guardado en .env correctamente")
+
           
             headers = {'Authorization': 'Bearer '+token_acceso} 
             response = requests.get(BASE_API_URL + version + 'usuario/token/' + token_acceso,headers=headers)

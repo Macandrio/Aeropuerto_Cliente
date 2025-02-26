@@ -383,8 +383,8 @@ class VueloActualizarcodigoForm(forms.Form):
 class RegistroForm(UserCreationForm): 
     roles = (
                                 ("","NINGUNO"),
-                                (1, 'Cliente'),
-                                (2, 'Gerente'),
+                                (2, 'Cliente'),
+                                (3, 'Gerente'),
             )   
     rol = forms.ChoiceField(choices=roles)  
     class Meta:

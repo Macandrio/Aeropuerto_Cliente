@@ -33,16 +33,19 @@
                     <br>
                     </p>
                 </div>
+                {% if vuelo.id %}
                 <div class="card-footer text-center">
                     {% load bootstrap_icons %}
+                    
                     <div class="row btn-group">
                         <div class="mb-2">
                             <button type="button" 
-                                    class="btn btn-outline-primary"> 
+                                    class="btn btn-outline-primary">
                                     <a href="{% url 'Vuelo_editar' vuelo.id %}" ><span>{% bs_icon 'pencil' %}</span></a> 
                             </button>
                         </div>
                     </div>
+                    
                     <div class="mb-2">
                         <form action = "{% url 'Vuelo_eliminar' vuelo.id %}" method="post"> 
                             {% csrf_token %}
@@ -60,6 +63,9 @@
                 </div>
             </div>
         </div>
+        {% else %}
+        <p>No se puede editar este vuelo porque no tiene un ID válido.</p>
+        {% endif %}
         {% endfor %}
     {% else %}
         <div class="col-12">
