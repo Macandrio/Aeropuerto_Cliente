@@ -55,4 +55,8 @@ urlpatterns = [
     path('registrar',views.registrar_usuario,name='registrar_usuario'),
     path('login',views.login,name='login'),
     path('logout',views.logout,name='logout'),
+
+
+    #Get usuario y gerente
+    path('Reserva/pasajero',views.Reservas_psajero_obtener, name='Reservas_psajero_obtener'),
 ]

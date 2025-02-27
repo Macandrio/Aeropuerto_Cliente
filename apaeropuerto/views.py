@@ -20,10 +20,6 @@ load_dotenv()  # Cargar variables del entorno
 
 token = os.getenv("TOKEN_ACCESO")
 
-
-
-
-
 # Cargar variables de entorno
 BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'), True)
@@ -51,15 +47,7 @@ def index(request):
 #------------------------------------------------Listar--------------------------------------------------------------
 
 def aeropuerto_listar_api(request):
-    if (request.user.is_anonymous==False):     
-        if (request.user and request.user.rol == 1):       
-            headers = {'Authorization': 'Bearer '+token} 
-        elif (request.user and request.user.rol == 2):
-            headers = {'Authorization': 'Bearer '+token} 
-        else:
-            headers = {'Authorization': 'Bearer '+token}
-    else:
-        headers = {'Authorization': 'Bearer '+token}
+    headers = {'Authorization': 'Bearer '+token}
 
     response = requests.get(BASE_API_URL + version + 'Aeropuerto', headers=headers)
     aeropuertos = response.json()
@@ -80,18 +68,8 @@ def aerolinea_listar_api(request):
     return render(request, 'paginas/aerolinea_list.html', {'aerolineas': aerolineas})
 
 def reserva_listar_api(request):
-    token = request.session.get("token")  # Asegúrate de que el usuario tenga un token almacenado
-
-    if not token:
-        print("❌ ERROR: No se encontró el token en la sesión.")
-        return render(request, 'error.html', {"error": "No tienes una sesión activa. Inicia sesión nuevamente."})
-
-    headers = {'Authorization': f'Bearer {token}'}
-
-    # 🔍 Imprimir el token antes de enviarlo
-    print("🔑 Token enviado en headers:", headers)
-
-    # headers = {'Authorization': 'Bearer '+ token}
+    
+    headers = {'Authorization': 'Bearer '+ token}
     response = requests.get(BASE_API_URL + version + 'Reservas', headers=headers)
     reservas = response.json()
     return render(request, 'paginas/reserva_list.html', {'reservas': reservas})
@@ -233,6 +211,17 @@ def Reserva_busqueda_avanzada(request):
 
         if formulario.is_valid():
             try:
+                # 🔹 Obtener el usuario actual de la sesión
+                if "usuario" not in request.session:
+                    return redirect("login")  # Redirigir si no hay usuario autenticado
+                
+                usuario = request.session.get("usuario")  # 🔹 Obtener datos del usuario logueado
+                id_usuario = usuario.get("id")  # 🔹 Extraer el ID del usuario
+
+                # 🔹 Agregar el `id_usuario` a los datos del formulario antes de enviarlos
+                datos_formulario = formulario.cleaned_data
+                datos_formulario["id_usuario"] = id_usuario  # 🔹 Incluir usuario en los parámetros
+
                 headers = crear_cabecera()
                 response = requests.get(
                     BASE_API_URL + version + 'Reservas/busqueda_avanzada',
@@ -340,9 +329,13 @@ def Reserva_crear(request):
 
             headers =  crear_cabecera()
 
+            pasajero_select = helper.obtener_usuario_actual_select(request)
+            print(f"🔍 Contenido de pasajero_select: {pasajero_select}")  
+            pasajero_id = pasajero_select['id']  # 🔹 Extraer solo el ID del pasajero
+
             datos = formulario.data.copy()
             datos["metodo_pago"] = request.POST.get("metodo_pago")
-
+            datos["pasajero"] = pasajero_id
             
             response = requests.post(
                 BASE_API_URL + version +'Reserva/Crear',
@@ -352,7 +345,7 @@ def Reserva_crear(request):
 
             if response.status_code == requests.codes.ok:
                 messages.success(request, response.json())  # ✅ Mostrar mensaje en la plantilla
-                return redirect("reserva_listar_api")
+                return redirect("Reservas_psajero_obtener")
             else:
                 return manejar_errores_api(response, request, formulario, "Formularios/Reservas/create.html")
 
@@ -918,9 +911,18 @@ def Vuelo_eliminar(request,vuelo_id):
         return mi_error_500(request)
     return redirect('vuelo_listar_api')
 
+#------------------------------------------------Get Pasajero y Gerente-----------------------------------------------------------------------------
+
+def Reservas_psajero_obtener(request):
+
+    usuario = request.session.get("usuario")  # 🔹 Obtener datos del usuario logueado
+    usuario_id = usuario.get("id")  # 🔹 Extraer el ID del pasajero
+
+    reserva = helper.obtener_Reservas_pasajero(usuario_id)
+    return render(request, 'paginas/reserva_list_pasajero.html',{"reservas":reserva})
 
 #------------------------------------------------usuario-----------------------------------------------------------------------------
-
+#AGR12345
 def registrar_usuario(request):
     if (request.method == "POST"):
         try:

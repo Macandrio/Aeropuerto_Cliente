@@ -12,12 +12,12 @@
                 <a class="dropdown-item" href="{% url 'Reserva_crear' %}"><i class="fas fa-search"></i> Crear Reservas </a>
             </li>
             <!-- Vuelo-->
-            <li>
+            {% comment %} <li>
                 <a class="dropdown-item" href="{% url 'Vuelo_crear' %}"><i class="fas fa-search"></i> Crear Vuelo </a>
             </li>
             <li>
                 <a class="dropdown-item" href="{% url 'vuelo_listar_api_botones' %}"><i class="fas fa-search"></i> Buscar Vuelo </a>
-        </li>
+        </li> {% endcomment %}
         {% elif request.session.usuario.rol == 3 %} <!-- Opciones para el rol GERENTE -->
             <!-- Aeropuerto -->
             <li>

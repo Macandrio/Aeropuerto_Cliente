@@ -5,14 +5,14 @@
     <ul class="dropdown-menu dropdown-menu-end">
         {% if request.session.usuario.rol == 2 %} <!-- Opciones para el rol PASAJERO -->
             <li>
-                <a class="dropdown-item" href="{% url 'reserva_listar_api' %}"><i class="fa-solid fa-building"></i> Reserva</a>
+                <a class="dropdown-item" href="{% url 'Reservas_psajero_obtener' %}"><i class="fa-solid fa-building"></i> Reserva</a>
             </li>
-            <li>
-                <a class="dropdown-item" href="{% url 'vuelo_listar_api' %}"><i class="fa-solid fa-building"></i> Vuelos</a>
+            {% comment %} <li>
+                <a class="dropdown-item" href="{% url 'Vuelo_pasajero_obtener' %}"><i class="fa-solid fa-building"></i> Vuelos</a>
             </li>
             <li>
                 <a class="dropdown-item" href="{% url 'vuelo_listar_api_botones' %}"><i class="fa-solid fa-building"></i>Todos_Vuelos</a>
-            </li>
+            </li> {% endcomment %}
         {% elif request.session.usuario.rol == 3 %} <!-- Opciones para el rol GERENTE -->
             <li>
                 <a class="dropdown-item" href="{% url 'aeropuerto_listar_api' %}"><i class="fa-solid fa-building"></i> Aeropuertos</a>

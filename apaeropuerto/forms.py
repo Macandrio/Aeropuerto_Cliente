@@ -304,13 +304,13 @@ class ReservaForm(forms.Form):
         
         super(ReservaForm, self).__init__(*args, **kwargs)
         
-        pasajeroDisponibles = helper.obtener_Pasajero_select()
-        self.fields["pasajero"] = forms.ChoiceField(
-            choices=pasajeroDisponibles,
-            required=True,
-            help_text="Mantén pulsada la tecla control para seleccionar varios elementos"
+        # pasajeroDisponibles = helper.obtener_Pasajero_select()
+        # self.fields["pasajero"] = forms.ChoiceField(
+        #     choices=pasajeroDisponibles,
+        #     required=True,
+        #     help_text="Mantén pulsada la tecla control para seleccionar varios elementos"
 
-        )
+        # )
 
         vueloDisponibles = helper.obtener_Vuelos()
         self.fields["vuelo"] = forms.ChoiceField(
