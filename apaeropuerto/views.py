@@ -14,11 +14,7 @@ from dotenv import set_key
 import os
 from dotenv import load_dotenv
 
-
-
 load_dotenv()  # Cargar variables del entorno
-
-token = os.getenv("TOKEN_ACCESO")
 
 # Cargar variables de entorno
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,9 +23,11 @@ env = environ.Env()
 
 BASE_API_URL = env("BASE_API_URL")
 version = env("version")
+token = env('TOKEN_ACCESO')
 
 
 def crear_cabecera():
+    print(token)
     return {
         'Authorization': 'Bearer '+token,
         "Content-Type": "application/json"
@@ -47,7 +45,7 @@ def index(request):
 #------------------------------------------------Listar--------------------------------------------------------------
 
 def aeropuerto_listar_api(request):
-    headers = {'Authorization': 'Bearer '+token}
+    headers = crear_cabecera()
 
     response = requests.get(BASE_API_URL + version + 'Aeropuerto', headers=headers)
     aeropuertos = response.json()
