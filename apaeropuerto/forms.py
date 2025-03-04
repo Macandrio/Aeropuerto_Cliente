@@ -394,3 +394,42 @@ class RegistroForm(UserCreationForm):
 class LoginForm(forms.Form):
     usuario = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput())
+
+#---------------------------------------------Equipaje-----------------------------------------------------------------------
+
+from django import forms
+
+class EquipajeForm(forms.Form):
+    peso = forms.FloatField(
+        label="Peso (kg)",
+        min_value=0,  # Evita valores negativos
+        required=True,
+        help_text="Ingrese el peso del equipaje en kilogramos.",
+        widget=forms.NumberInput(attrs={"class": "form-control", "placeholder": "Ejemplo: 23.5"})
+    )
+    
+    dimensiones = forms.CharField(
+        label="Dimensiones",
+        max_length=50,
+        required=True,
+        help_text="Ejemplo: 55x40x20 cm",
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Ejemplo: 55x40x20 cm"})
+    )
+
+    tipo_material = forms.CharField(
+        label="Tipo de Material",
+        max_length=30,
+        required=True,
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Ejemplo: Plástico, Tela"})
+    )
+
+    color = forms.CharField(
+        label="Color",
+        max_length=50,
+        required=True,
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Ejemplo: Azul, Rojo"})
+    )
+
+    def __init__(self, *args, **kwargs):
+        
+        super(EquipajeForm, self).__init__(*args, **kwargs)

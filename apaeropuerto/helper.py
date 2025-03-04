@@ -121,6 +121,13 @@ class helper:
         reserva = response.json()
         return reserva
     
+    def obtener_Equipaje_pasajero(id):
+        # obtenemos el Reserva del pasajero
+        headers = {'Authorization': 'Bearer '+token} 
+        response = requests.get(BASE_API_URL + version + 'Equipaje/pasajero/' + str(id) ,headers=headers)
+        equipaje = response.json()
+        return equipaje
+    
     def obtener_vuelos_pasajero(id):
         # obtenemos el Vuelos del pasajero
         headers = {'Authorization': 'Bearer '+token} 

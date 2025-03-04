@@ -59,4 +59,6 @@ urlpatterns = [
 
     #Get usuario y gerente
     path('Reserva/pasajero',views.Reservas_psajero_obtener, name='Reservas_psajero_obtener'),
+    path('Equipaje/pasajero',views.Equipaje_pasajero_obtener, name='Equipaje_pasajero_obtener'),
+    path('Equipaje/Crear/', views.Equipaje_crear, name='Equipaje_crear'),
 ]

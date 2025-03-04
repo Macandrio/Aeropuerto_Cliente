@@ -919,6 +919,47 @@ def Reservas_psajero_obtener(request):
     reserva = helper.obtener_Reservas_pasajero(usuario_id)
     return render(request, 'paginas/reserva_list_pasajero.html',{"reservas":reserva})
 
+def Equipaje_crear(request):
+    
+    if (request.method == "POST"):
+        try:
+            formulario = EquipajeForm(request.POST)
+
+            headers =  crear_cabecera()
+
+            pasajero_select = helper.obtener_usuario_actual_select(request)
+            print(f"🔍 Contenido de pasajero_select: {pasajero_select}")  
+            pasajero_id = pasajero_select['id']  # 🔹 Extraer solo el ID del pasajero
+
+            datos = formulario.data.copy()
+            datos["pasajero"] = pasajero_id
+            
+            response = requests.post(
+                BASE_API_URL + version +'Equipaje/Crear',
+                headers=headers,
+                data=json.dumps(datos)
+            )
+
+            if response.status_code == requests.codes.ok:
+                messages.success(request, response.json())  # ✅ Mostrar mensaje en la plantilla
+                return redirect("Equipaje_pasajero_obtener")
+            else:
+                return manejar_errores_api(response, request, formulario, "Formularios/Equipaje/create.html")
+
+        except Exception as err:
+            return manejar_excepciones_api(err, request)  
+    else:
+         formulario = EquipajeForm(None)
+    return render(request, 'Formularios/Equipaje/crear.html',{"form":formulario})
+
+def Equipaje_pasajero_obtener(request):
+
+    usuario = request.session.get("usuario")  # 🔹 Obtener datos del usuario logueado
+    usuario_id = usuario.get("id")  # 🔹 Extraer el ID del pasajero
+
+    equipajes = helper.obtener_Equipaje_pasajero(usuario_id)
+    return render(request, 'paginas/equipaje_list.html',{"equipajes":equipajes})
+
 #------------------------------------------------usuario-----------------------------------------------------------------------------
 #AGR12345
 def registrar_usuario(request):
